@@ -18,14 +18,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FolderCell" id="MBv-ES-xSJ" customClass="folderCells" customModule="File_Manager" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="MBv-ES-xSJ" customClass="folderAndFileCell" customModule="File_Manager" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MBv-ES-xSJ" id="bYX-6K-hkU">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="folder" translatesAutoresizingMaskIntoConstraints="NO" id="Mfe-yX-W0k">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mfe-yX-W0k">
                                             <rect key="frame" x="16" y="0.0" width="44" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
@@ -40,46 +40,14 @@
                                             <rect key="frame" x="325" y="11" width="22" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                             <connections>
-                                                <action selector="actionInfoCellForFolders:" destination="NOQ-nS-XZc" eventType="touchUpInside" id="Udf-Nd-dP6"/>
-                                                <segue destination="iLW-5X-ZvZ" kind="show" identifier="folderSegue" id="MgQ-Mq-3r9"/>
+                                                <action selector="actionInfoCell:" destination="NOQ-nS-XZc" eventType="touchUpInside" id="2Mx-de-y56"/>
                                             </connections>
                                         </button>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="nameLabel" destination="5Ck-56-Sag" id="zdr-dT-7cv"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FileCell" id="MYl-7f-hkI" customClass="fileCells" customModule="File_Manager" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MYl-7f-hkI" id="TcZ-rS-JqQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="file" translatesAutoresizingMaskIntoConstraints="NO" id="xw1-QM-ybx">
-                                            <rect key="frame" x="16" y="2" width="44" height="40"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePW-jk-tg0">
-                                            <rect key="frame" x="68" y="11" width="200" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NUH-dU-ey0">
-                                            <rect key="frame" x="325" y="11" width="22" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
-                                            <connections>
-                                                <action selector="actionInfoCellForFiles:" destination="NOQ-nS-XZc" eventType="touchUpInside" id="IOr-aX-Kwt"/>
-                                                <segue destination="SfM-I1-lAY" kind="show" identifier="fileSegue" id="No4-R1-pbc"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="nameLabel" destination="ePW-jk-tg0" id="K31-DU-LUo"/>
+                                    <outlet property="cellImage" destination="Mfe-yX-W0k" id="yUX-WF-ExG"/>
+                                    <outlet property="nameLabel" destination="5Ck-56-Sag" id="r6C-L9-7dB"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -89,6 +57,10 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="8qN-xr-zlt"/>
+                    <connections>
+                        <segue destination="iLW-5X-ZvZ" kind="show" identifier="folderSegue" id="u4S-8n-GH9"/>
+                        <segue destination="SfM-I1-lAY" kind="show" identifier="fileSegue" id="F4n-SD-drX"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QyJ-mR-SSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="W0U-oa-6cT">
@@ -100,7 +72,7 @@
                     </connections>
                 </button>
             </objects>
-            <point key="canvasLocation" x="-154" y="72"/>
+            <point key="canvasLocation" x="-126" y="-100"/>
         </scene>
         <!--File View Controller-->
         <scene sceneID="dpR-0X-RvJ">
@@ -367,8 +339,4 @@
             <point key="canvasLocation" x="-1006" y="72"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="file" width="256" height="256"/>
-        <image name="folder" width="38.400001525878906" height="38.400001525878906"/>
-    </resources>
 </document>
