@@ -23,19 +23,23 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
         
         brains.sortTheConents(array: brains.contents)
         
-        self.navigationItem.title = brains.path.lastPathComponent()
+        navigationItem.title = brains.path.lastPathComponent()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if self.navigationController!.viewControllers.count > 1 {
+        navigationButtons()
+    }
+    
+    func navigationButtons () {
+        if navigationController!.viewControllers.count > 1 {
             let backToRoot = UIBarButtonItem.init(title: "Back To Root",
                                                   style: UIBarButtonItem.Style.plain,
                                                   target: self,
                                                   action: #selector(DirectoryController.backToRoot))
             
-            self.navigationItem.rightBarButtonItem = backToRoot
+            navigationItem.rightBarButtonItem = backToRoot
         }
         
         let addAction = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonItem.SystemItem.add,
@@ -49,14 +53,13 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
                                               action: #selector(DirectoryController.editAction))
         
         let arraysOfButtons = [addAction, space, editAction]
-        self.toolbarItems = arraysOfButtons
-        
+        toolbarItems = arraysOfButtons
     }
     
     // MARK: Actions
 
     @objc func backToRoot() {
-        self.navigationController?.popToRootViewController(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     @objc func addAction() {
@@ -104,15 +107,15 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
             
         }
         alert.addAction(defaultAction)
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func editAction() {
         
-        if self.tableView.isEditing == true {
-            self.tableView.setEditing(false, animated: true)
+        if tableView.isEditing == true {
+            tableView.setEditing(false, animated: true)
         } else {
-            self.tableView.setEditing(true, animated: true)
+            tableView.setEditing(true, animated: true)
         }
         
     }
@@ -120,7 +123,7 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
     // MARK: Table view datasource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.brains.contents.count
+        return brains.contents.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -129,14 +132,14 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
 
         if brains.isDirectoryAt(indexPath: indexPath) {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! folderAndFileCell
-            cell.nameLabel.text = self.brains.contents[indexPath.row]
+            cell.nameLabel.text = brains.contents[indexPath.row]
             cell.cellImage.image = UIImage.init(named: "folder")
             cell.delegate = self
             
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! folderAndFileCell
-            cell.nameLabel.text = self.brains.contents[indexPath.row]
+            cell.nameLabel.text = brains.contents[indexPath.row]
             cell.cellImage.image = UIImage.init(named: "file")
             cell.delegate = self
             
@@ -146,8 +149,8 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination is FileViewController {
-            let fileName = self.brains.contents[indexPathOfButton!.row]
-            let path = self.brains.path.appendingPathComponent(path: fileName)
+            let fileName = brains.contents[indexPathOfButton!.row]
+            let path = brains.path.appendingPathComponent(path: fileName)
             let attributes = try? FileManager.default.attributesOfItem(atPath: path) as NSDictionary
             
             let vc = segue.destination as? FileViewController
@@ -159,8 +162,8 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
         }
         
         if segue.destination is FolderViewController {
-            let folderName = self.brains.contents[indexPathOfButton!.row]
-            let path = self.brains.path.appendingPathComponent(path: folderName)
+            let folderName = brains.contents[indexPathOfButton!.row]
+            let path = brains.path.appendingPathComponent(path: folderName)
             let attributes = try? FileManager.default.attributesOfItem(atPath: path) as NSDictionary
             
             let folderSize = brains.casting(bytes: Double(brains.folderSizeAndAmount(folderPath: path).0))
@@ -182,19 +185,19 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
-            let name = self.brains.contents[indexPath.row]
-            let path = self.brains.path.appendingPathComponent(path: name)
+            let name = brains.contents[indexPath.row]
+            let path = brains.path.appendingPathComponent(path: name)
             
             var tempArray: Array<String>
             
             if ((try? FileManager.default.removeItem(atPath: path)) != nil){
-                tempArray = self.brains.contents
+                tempArray = brains.contents
                 tempArray.remove(at: indexPath.row)
-                self.brains.contents = tempArray
+                brains.contents = tempArray
                 
-                self.tableView.beginUpdates()
-                self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
-                self.tableView.endUpdates()
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
+                tableView.endUpdates()
             }
             
         }
@@ -207,12 +210,12 @@ class DirectoryController: UITableViewController, CustomCellDelegator {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if brains.isDirectoryAt(indexPath: indexPath) {
-            let fileName = self.brains.contents[indexPath.row]
-            let path = self.brains.path.appendingPathComponent(path: fileName)
+            let fileName = brains.contents[indexPath.row]
+            let path = brains.path.appendingPathComponent(path: fileName)
             
-            let viewController: DirectoryController = self.storyboard?.instantiateViewController(withIdentifier: "DirectoryController") as! DirectoryController
+            let viewController: DirectoryController = storyboard?.instantiateViewController(withIdentifier: "DirectoryController") as! DirectoryController
             viewController.brains.path = path
-            self.navigationController!.pushViewController(viewController, animated: true)
+            navigationController!.pushViewController(viewController, animated: true)
             
         }
     }

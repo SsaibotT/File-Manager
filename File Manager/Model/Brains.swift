@@ -28,7 +28,7 @@ class Brains: NSObject {
                 }
             }
             
-            self.contents = tempArray
+            contents = tempArray
         }
     }
     
@@ -50,7 +50,7 @@ class Brains: NSObject {
         
         for i in 0..<tempArray.count {
             let index = IndexPath.init(row: i, section: 0)
-            if self.isDirectoryAt(indexPath: index) {
+            if isDirectoryAt(indexPath: index) {
                 arrayOfDirectories.append(array[i])
             } else {
                 arrayOfFiles.append(array[i])
