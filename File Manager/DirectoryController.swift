@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DirectoryController: UITableViewController {
+class DirectoryController: UITableViewController, CustomCellDelegator {
     
     lazy var brains = Brains()
     
@@ -23,7 +23,6 @@ class DirectoryController: UITableViewController {
         
         brains.sortTheConents(array: brains.contents)
         
-        //self.tableView.reloadData()
         self.navigationItem.title = brains.path.lastPathComponent()
     }
     
@@ -55,24 +54,7 @@ class DirectoryController: UITableViewController {
     }
     
     // MARK: Actions
-    
-    @IBAction func actionInfoCell(_ sender: UIButton) {
-        
-        let cell: UITableViewCell? = sender.superCell()
 
-        if cell != nil {
-            
-            indexPathOfButton = self.tableView.indexPath(for: cell!)
-            
-            if brains.isDirectoryAt(indexPath: indexPathOfButton!) {
-                performSegue(withIdentifier: "folderSegue", sender: nil)
-            } else {
-                performSegue(withIdentifier: "fileSegue", sender: nil)
-            }
-        }
-    }
-
-    
     @objc func backToRoot() {
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -149,13 +131,15 @@ class DirectoryController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! folderAndFileCell
             cell.nameLabel.text = self.brains.contents[indexPath.row]
             cell.cellImage.image = UIImage.init(named: "folder")
-
+            cell.delegate = self
+            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! folderAndFileCell
             cell.nameLabel.text = self.brains.contents[indexPath.row]
             cell.cellImage.image = UIImage.init(named: "file")
-
+            cell.delegate = self
+            
             return cell
         }
     }
@@ -228,10 +212,28 @@ class DirectoryController: UITableViewController {
             
             let viewController: DirectoryController = self.storyboard?.instantiateViewController(withIdentifier: "DirectoryController") as! DirectoryController
             viewController.brains.path = path
-            viewController.navigationItem.title = brains.path.lastPathComponent()
             self.navigationController!.pushViewController(viewController, animated: true)
             
         }
+    }
+    
+    //MARK: Custom cell delegate
+    
+    func callSegueFromCell(sender: UIButton) {
+        
+        let cell: UITableViewCell? = sender.superCell()
+        
+        if cell != nil {
+            
+            indexPathOfButton = self.tableView.indexPath(for: cell!)
+            
+            if brains.isDirectoryAt(indexPath: indexPathOfButton!) {
+                performSegue(withIdentifier: "folderSegue", sender: nil)
+            } else {
+                performSegue(withIdentifier: "fileSegue", sender: nil)
+            }
+        }
+        
     }
     
 }

@@ -40,7 +40,7 @@
                                             <rect key="frame" x="325" y="11" width="22" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                             <connections>
-                                                <action selector="actionInfoCell:" destination="NOQ-nS-XZc" eventType="touchUpInside" id="2Mx-de-y56"/>
+                                                <action selector="infoButtonAction:" destination="MBv-ES-xSJ" eventType="touchUpInside" id="PTe-Yn-Z1D"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -336,7 +336,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8NI-Dc-7gh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1006" y="72"/>
+            <point key="canvasLocation" x="-980" y="-100"/>
         </scene>
     </scenes>
 </document>

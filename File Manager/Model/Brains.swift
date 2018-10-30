@@ -29,7 +29,6 @@ class Brains: NSObject {
             }
             
             self.contents = tempArray
-            
         }
     }
     
