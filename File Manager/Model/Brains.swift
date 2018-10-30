@@ -10,17 +10,32 @@ import UIKit
 
 class Brains: NSObject {
 
-    var myContents: [String] = [""]
-    var myPath = ""
-    
-    init(contents: [String], path: String) {
-        myContents = contents
-        myPath = path
+    var directoryVC = DirectoryController()
+    var contents: [String] = [""]
+    var path: String! {
+        didSet {
+            do {
+                contents = try FileManager.default.contentsOfDirectory(atPath: path)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+                contents = [""]
+            }
+            
+            var tempArray = [String]()
+            for i in contents {
+                if i != ".DS_Store" {
+                    tempArray.append(i)
+                }
+            }
+            
+            self.contents = tempArray
+            
+        }
     }
     
     func isDirectoryAt(indexPath: IndexPath) -> Bool{
-        let fileName = myContents[indexPath.row]
-        let filePath = myPath.appendingPathComponent(path: fileName)
+        let fileName = contents[indexPath.row]
+        let filePath = path.appendingPathComponent(path: fileName)
         
         var isDirectory = ObjCBool(false)
         FileManager.default.fileExists(atPath: filePath, isDirectory: &isDirectory)
@@ -44,7 +59,7 @@ class Brains: NSObject {
         }
         
         let sortedArray = arrayOfDirectories.sorted{$0 < $1} + arrayOfFiles.sorted{$0 < $1}
-        myContents = sortedArray
+        contents = sortedArray
         
     }
     

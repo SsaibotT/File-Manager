@@ -18,7 +18,5 @@ class folderAndFileCell: UITableViewCell {
         // Initialization code
     }
 
-    // MARK: Actions
-
 }
 

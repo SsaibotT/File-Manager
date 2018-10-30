@@ -10,44 +10,21 @@ import UIKit
 
 class DirectoryController: UITableViewController {
     
-    lazy var brains = Brains(contents: contents, path: path)
+    lazy var brains = Brains()
     
-    var indexPathOfFileButton: IndexPath?
     var indexPathOfButton: IndexPath?
-    var amountOfFilesInFolder: Int?
-    
-    var contents: [String] = [""]
-    var path: String! {
-        didSet {
-            do {
-                contents = try FileManager.default.contentsOfDirectory(atPath: path)
-            } catch let error as NSError {
-                print(error.localizedDescription)
-                contents = [""]
-            }
-            
-            var tempArray = [String]()
-            for i in contents {
-                if i != ".DS_Store" {
-                    tempArray.append(i)
-                }
-            }
-
-            self.contents = tempArray
-            
-            self.tableView.reloadData()
-            self.navigationItem.title = path.lastPathComponent()
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if self.path == nil {
-            self.path = "/Users/ghjkghkj/Desktop/folder/"
+        if brains.path == nil {
+            brains.path = "/Users/ghjkghkj/Desktop/folder/"
         }
         
-        brains.sortTheConents(array: self.contents)
+        brains.sortTheConents(array: brains.contents)
+        
+        //self.tableView.reloadData()
+        self.navigationItem.title = brains.path.lastPathComponent()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,7 +88,7 @@ class DirectoryController: UITableViewController {
         let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) { (alertAction) in
             let textField = alert.textFields?.first?.text
             
-            if (textField == "" || self.contents.contains(textField!)) {
+            if (textField == "" || self.brains.contents.contains(textField!)) {
                 let FailAlert = UIAlertController.init(title: "Fail", message: "Name is invalid", preferredStyle: UIAlertController.Style.alert)
                 let failAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
                     self.addAction()
@@ -122,18 +99,18 @@ class DirectoryController: UITableViewController {
                 
             } else {
                 let name = textField
-                let path = self.path.appendingPathComponent(path: name!)
+                let path = self.brains.path.appendingPathComponent(path: name!)
                 
                 var tempArray: Array<String>
                 
                 if (try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)) != nil {
-                    tempArray = self.contents
+                    tempArray = self.brains.contents
                     tempArray.insert(name!, at: 0)
-                    self.contents = tempArray
+                    self.brains.contents = tempArray
                     
-                    self.brains.sortTheConents(array: self.contents)
+                    self.brains.sortTheConents(array: self.brains.contents)
                     
-                    let row = self.contents.index(of: name!)
+                    let row = self.brains.contents.index(of: name!)
                     let IndexPath1 = IndexPath.init(row: row!, section: 0)
                     
                     self.tableView.beginUpdates()
@@ -161,7 +138,7 @@ class DirectoryController: UITableViewController {
     // MARK: Table view datasource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.contents.count
+        return self.brains.contents.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -170,13 +147,13 @@ class DirectoryController: UITableViewController {
 
         if brains.isDirectoryAt(indexPath: indexPath) {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! folderAndFileCell
-            cell.nameLabel.text = self.contents[indexPath.row]
+            cell.nameLabel.text = self.brains.contents[indexPath.row]
             cell.cellImage.image = UIImage.init(named: "folder")
 
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! folderAndFileCell
-            cell.nameLabel.text = self.contents[indexPath.row]
+            cell.nameLabel.text = self.brains.contents[indexPath.row]
             cell.cellImage.image = UIImage.init(named: "file")
 
             return cell
@@ -185,8 +162,8 @@ class DirectoryController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination is FileViewController {
-            let fileName = self.contents[indexPathOfFileButton!.row]
-            let path = self.path.appendingPathComponent(path: fileName)
+            let fileName = self.brains.contents[indexPathOfButton!.row]
+            let path = self.brains.path.appendingPathComponent(path: fileName)
             let attributes = try? FileManager.default.attributesOfItem(atPath: path) as NSDictionary
             
             let vc = segue.destination as? FileViewController
@@ -198,8 +175,8 @@ class DirectoryController: UITableViewController {
         }
         
         if segue.destination is FolderViewController {
-            let folderName = self.contents[indexPathOfButton!.row]
-            let path = self.path.appendingPathComponent(path: folderName)
+            let folderName = self.brains.contents[indexPathOfButton!.row]
+            let path = self.brains.path.appendingPathComponent(path: folderName)
             let attributes = try? FileManager.default.attributesOfItem(atPath: path) as NSDictionary
             
             let folderSize = brains.casting(bytes: Double(brains.folderSizeAndAmount(folderPath: path).0))
@@ -221,15 +198,15 @@ class DirectoryController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
-            let name = self.contents[indexPath.row]
-            let path = self.path.appendingPathComponent(path: name)
+            let name = self.brains.contents[indexPath.row]
+            let path = self.brains.path.appendingPathComponent(path: name)
             
             var tempArray: Array<String>
             
             if ((try? FileManager.default.removeItem(atPath: path)) != nil){
-                tempArray = self.contents
+                tempArray = self.brains.contents
                 tempArray.remove(at: indexPath.row)
-                self.contents = tempArray
+                self.brains.contents = tempArray
                 
                 self.tableView.beginUpdates()
                 self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
@@ -246,11 +223,12 @@ class DirectoryController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if brains.isDirectoryAt(indexPath: indexPath) {
-            let fileName = self.contents[indexPath.row]
-            let path = self.path.appendingPathComponent(path: fileName)
+            let fileName = self.brains.contents[indexPath.row]
+            let path = self.brains.path.appendingPathComponent(path: fileName)
             
             let viewController: DirectoryController = self.storyboard?.instantiateViewController(withIdentifier: "DirectoryController") as! DirectoryController
-            viewController.path = path
+            viewController.brains.path = path
+            viewController.navigationItem.title = brains.path.lastPathComponent()
             self.navigationController!.pushViewController(viewController, animated: true)
             
         }
