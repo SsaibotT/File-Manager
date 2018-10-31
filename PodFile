@@ -1,0 +1,7 @@
+platform :ios, '10.0'
+use_frameworks!
+
+target 'File Manager' do
+pod 'SwiftLint', '~> 0.27'
+end
+

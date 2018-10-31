@@ -15,13 +15,13 @@ class FolderViewController: UIViewController {
     @IBOutlet weak var amountOfFilesLabel: UILabel!
     @IBOutlet weak var creationDateLabel: UILabel!
     @IBOutlet weak var modofiedDateLabel: UILabel!
-    
+
     var name: String?
     var size: String?
     var amountOfFiles: String?
     var creationDate: String?
     var modifiedDate: String?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -31,7 +31,4 @@ class FolderViewController: UIViewController {
         self.creationDateLabel.text  = self.creationDate
         self.modofiedDateLabel.text  = self.modifiedDate
     }
-    
-
-
 }

@@ -11,84 +11,83 @@ import UIKit
 class Brains: NSObject {
 
     var directoryVC = DirectoryController()
-    var contents: [String] = [""]
-    var path: String! {
+    var contents: [URL]?
+    var path: URL! {
         didSet {
             do {
-                contents = try FileManager.default.contentsOfDirectory(atPath: path)
+                contents = try FileManager.default.contentsOfDirectory(at: path,
+                                                                       includingPropertiesForKeys: nil,
+                                                                       options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
             } catch let error as NSError {
                 print(error.localizedDescription)
-                contents = [""]
+                contents = nil
             }
-            
-            var tempArray = [String]()
-            for i in contents {
-                if i != ".DS_Store" {
-                    tempArray.append(i)
-                }
-            }
-            
-            contents = tempArray
         }
     }
-    
-    func isDirectoryAt(indexPath: IndexPath) -> Bool{
-        let fileName = contents[indexPath.row]
-        let filePath = path.appendingPathComponent(path: fileName)
-        
+
+    func isDirectoryAt(atIndexPath: Int) -> Bool {
+
         var isDirectory = ObjCBool(false)
-        FileManager.default.fileExists(atPath: filePath, isDirectory: &isDirectory)
-        
+        let pathAtIndex = contents![atIndexPath]
+        FileManager.default.fileExists(atPath: pathAtIndex.path, isDirectory: &isDirectory)
         return isDirectory.boolValue
     }
-    
-    func sortTheConents(array: Array<String>) {
-        
+
+    func sortTheConents(array: [URL]) {
+
         let tempArray = array
-        var arrayOfDirectories = [String]()
-        var arrayOfFiles = [String]()
-        
-        for i in 0..<tempArray.count {
-            let index = IndexPath.init(row: i, section: 0)
-            if isDirectoryAt(indexPath: index) {
-                arrayOfDirectories.append(array[i])
+        var arrayOfDirectories = [URL]()
+        var arrayOfFiles = [URL]()
+
+        for counter in 0..<tempArray.count {
+            let index = counter
+            if isDirectoryAt(atIndexPath: index) {
+                arrayOfDirectories.append(array[counter])
             } else {
-                arrayOfFiles.append(array[i])
+                arrayOfFiles.append(array[counter])
             }
         }
-        
-        let sortedArray = arrayOfDirectories.sorted{$0 < $1} + arrayOfFiles.sorted{$0 < $1}
+
+        let sortedArray = arrayOfDirectories.sorted{$0.lastPathComponent < $1.lastPathComponent} + arrayOfFiles.sorted{$0.lastPathComponent < $1.lastPathComponent}
+
         contents = sortedArray
-        
+
     }
-    
+
     func casting(bytes: Double) -> String {
         let unit = ["B", "KB", "MB", "GB", "TB"]
         var index = 0
-        
+
         var castedValue: Double = bytes
-        
+
         while castedValue > 1024 && index < 5 {
             castedValue /= 1024
             index += 1
         }
-        
+
         let castedToString = String(format: "%.2f", castedValue)
         return "\(castedToString) \(unit[index])"
     }
-    
-    func folderSizeAndAmount(folderPath:String) -> (UInt, Int){
-        
-        let filesArray:[String] = try! FileManager.default.subpathsOfDirectory(atPath: folderPath)
-        let fileAmount = filesArray.count
-        var fileSize:UInt = 0
-        
-        for fileName in filesArray{
-            let filePath = folderPath.appendingPathComponent(path: fileName)
-            let fileDictionary:NSDictionary = try! FileManager.default.attributesOfItem(atPath: filePath) as NSDictionary
-            fileSize += UInt(fileDictionary.fileSize())
+
+    func folderSizeAndAmount(folderPath: String) -> (UInt, Int) {
+
+        var filesArray: [String]?
+
+        do {
+            filesArray = try FileManager.default.subpathsOfDirectory(atPath: folderPath)
+        } catch let error as NSError {
+            print(error.localizedDescription)
         }
-        
+
+        let fileAmount = filesArray!.count
+        var fileSize: UInt = 0
+
+        for fileName in filesArray! {
+            let filePath = URL(fileURLWithPath: folderPath).appendingPathComponent(fileName)
+            let fileDictionary: NSDictionary? = try? FileManager.default.attributesOfItem(atPath: filePath.path) as NSDictionary
+            fileSize += UInt(fileDictionary!.fileSize())
+        }
+
         return (fileSize, fileAmount)
     }
 }
