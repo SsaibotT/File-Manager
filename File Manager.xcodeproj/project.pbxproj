@@ -18,6 +18,7 @@
 		C5DE22262181D748003376B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5DE22252181D748003376B3 /* Assets.xcassets */; };
 		C5DE22292181D748003376B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5DE22272181D748003376B3 /* LaunchScreen.storyboard */; };
 		C5DE22352181D956003376B3 /* DirectoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DE22342181D956003376B3 /* DirectoryController.swift */; };
+		C5F7721B218B08770091EBBB /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F7721A218B08770091EBBB /* ImageViewController.swift */; };
 		C5F7C79B2184A0EC009368B3 /* FolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F7C79A2184A0EC009368B3 /* FolderViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		C5DE22282181D748003376B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C5DE222A2181D748003376B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5DE22342181D956003376B3 /* DirectoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryController.swift; sourceTree = "<group>"; };
+		C5F7721A218B08770091EBBB /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		C5F7C79A2184A0EC009368B3 /* FolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +85,7 @@
 			children = (
 				C5C0A916218338CF004A7F69 /* FileViewController.swift */,
 				C5F7C79A2184A0EC009368B3 /* FolderViewController.swift */,
+				C5F7721A218B08770091EBBB /* ImageViewController.swift */,
 			);
 			path = "Secondary View Controllers";
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 				C537C19221887350009036EA /* extensions.swift in Sources */,
 				C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */,
 				C537C18F21886D75009036EA /* Brains.swift in Sources */,
+				C5F7721B218B08770091EBBB /* ImageViewController.swift in Sources */,
 				C5DE221F2181D741003376B3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

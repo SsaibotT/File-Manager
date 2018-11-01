@@ -25,10 +25,10 @@ class FolderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.nameLabel.text = self.name
-        self.sizeLabel.text = self.size
-        self.amountOfFilesLabel.text = self.amountOfFiles
-        self.creationDateLabel.text  = self.creationDate
-        self.modofiedDateLabel.text  = self.modifiedDate
+        nameLabel.text = name
+        sizeLabel.text = size
+        amountOfFilesLabel.text = amountOfFiles
+        creationDateLabel.text  = creationDate
+        modofiedDateLabel.text  = modifiedDate
     }
 }

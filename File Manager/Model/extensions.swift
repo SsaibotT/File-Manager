@@ -9,19 +9,6 @@
 import Foundation
 import UIKit
 
-//extension String {
-//
-//    func appendingPathComponent(path: String) -> String {
-//        let str = (self as NSString).appendingPathComponent(path)
-//        return str
-//    }
-//
-//    func lastPathComponent() -> String {
-//        let str = (self as NSString).lastPathComponent
-//        return str
-//    }
-//}
-//
 extension UIView {
 
     func superCell() -> UITableViewCell {

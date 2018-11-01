@@ -17,7 +17,9 @@ class Brains: NSObject {
             do {
                 contents = try FileManager.default.contentsOfDirectory(at: path,
                                                                        includingPropertiesForKeys: nil,
-                                                                       options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+                                                                       options: FileManager
+                                                                        .DirectoryEnumerationOptions
+                                                                        .skipsHiddenFiles)
             } catch let error as NSError {
                 print(error.localizedDescription)
                 contents = nil
@@ -31,6 +33,19 @@ class Brains: NSObject {
         let pathAtIndex = contents![atIndexPath]
         FileManager.default.fileExists(atPath: pathAtIndex.path, isDirectory: &isDirectory)
         return isDirectory.boolValue
+    }
+
+    func isImage(atIndexPath: Int) -> Bool {
+
+        let imageFormats = ["jpg", "png", "gif", "jpeg"]
+        let pathIndex = contents![atIndexPath]
+        let myExtension = pathIndex.pathExtension
+
+        if imageFormats.contains(myExtension) {
+            return true
+        } else {
+            return false
+        }
     }
 
     func sortTheConents(array: [URL]) {
@@ -84,7 +99,12 @@ class Brains: NSObject {
 
         for fileName in filesArray! {
             let filePath = URL(fileURLWithPath: folderPath).appendingPathComponent(fileName)
-            let fileDictionary: NSDictionary? = try? FileManager.default.attributesOfItem(atPath: filePath.path) as NSDictionary
+            var fileDictionary: NSDictionary?
+            do {
+            fileDictionary = try FileManager.default.attributesOfItem(atPath: filePath.path) as NSDictionary
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
             fileSize += UInt(fileDictionary!.fileSize())
         }
 

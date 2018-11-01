@@ -23,9 +23,9 @@ class FileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.nameLabel.text = self.name
-        self.sizeLabel.text = self.size
-        self.creationDateLabel.text = self.creationDate
-        self.modifiedDateLabel.text = self.modifiedDate
+        nameLabel.text = name
+        sizeLabel.text = size
+        creationDateLabel.text = creationDate
+        modifiedDateLabel.text = modifiedDate
     }
 }

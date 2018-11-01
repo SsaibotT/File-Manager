@@ -8,11 +8,15 @@
 
 import UIKit
 
-class DirectoryController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CustomCellDelegator {
+class DirectoryController: UITableViewController,
+UIImagePickerControllerDelegate,
+UINavigationControllerDelegate,
+CustomCellDelegator {
 
     lazy var brains = Brains()
 
     var indexPathOfButton: IndexPath?
+    var imageURL: URL?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,11 +76,13 @@ class DirectoryController: UITableViewController, UIImagePickerControllerDelegat
         self.present(imagePickerController, animated: true, completion: nil)
     }
 
-    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
+    @objc func imagePickerController(_ picker: UIImagePickerController,
+                                     didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
         let image = info[.imageURL] as? URL
 
         let name = brains.path.appendingPathComponent((image?.lastPathComponent)!)
+
         do {
             try FileManager.default.copyItem(at: image!, to: name)
         } catch let error as NSError {
@@ -188,6 +194,13 @@ class DirectoryController: UITableViewController, UIImagePickerControllerDelegat
             cell!.delegate = self
 
             return cell!
+        } else if brains.isImage(atIndexPath: indexPath.row) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell
+            cell!.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
+            cell!.cellImage.image = UIImage.init(named: "image")
+            cell?.delegate = self
+
+            return cell!
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell
             cell!.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
@@ -201,7 +214,13 @@ class DirectoryController: UITableViewController, UIImagePickerControllerDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.destination is FileViewController {
             let fileName = brains.contents![indexPathOfButton!.row]
-            let attributes = try? FileManager.default.attributesOfItem(atPath: fileName.path) as NSDictionary
+
+            var attributes: NSDictionary?
+            do {
+                attributes = try FileManager.default.attributesOfItem(atPath: fileName.path) as NSDictionary
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
 
             let vcontr = segue.destination as? FileViewController
 
@@ -213,7 +232,14 @@ class DirectoryController: UITableViewController, UIImagePickerControllerDelegat
 
         if segue.destination is FolderViewController {
             let folderName = brains.contents![indexPathOfButton!.row]
-            let attributes = try? FileManager.default.attributesOfItem(atPath: folderName.path) as NSDictionary
+
+            var attributes: NSDictionary?
+            do {
+                attributes = try FileManager.default.attributesOfItem(atPath: folderName.path) as NSDictionary
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+
             let folderSize = brains.casting(bytes: Double(brains.folderSizeAndAmount(folderPath: folderName.path).0))
             let vcontr = segue.destination as? FolderViewController
 
@@ -224,13 +250,30 @@ class DirectoryController: UITableViewController, UIImagePickerControllerDelegat
             vcontr?.modifiedDate  = "\((attributes!.fileModificationDate())!)"
 
         }
+
+        if segue.destination is ImageViewController {
+            let url = imageURL
+            var data: Data!
+
+            do {
+                data = try Data(contentsOf: url!)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+
+            let vcontr = segue.destination as? ImageViewController
+
+            vcontr?.image = UIImage(data: data!)
+        }
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                            forRowAt indexPath: IndexPath) {
+
         if editingStyle == UITableViewCell.EditingStyle.delete {
             let name = brains.contents![indexPath.row]
             print(name.path)
@@ -261,10 +304,15 @@ class DirectoryController: UITableViewController, UIImagePickerControllerDelegat
             let fileName = brains.contents![indexPath.row].lastPathComponent
             let path = brains.path.appendingPathComponent(fileName)
 
-            let viewController: DirectoryController = (storyboard?.instantiateViewController(withIdentifier: "DirectoryController") as? DirectoryController)!
+            let viewController: DirectoryController = (storyboard?
+                .instantiateViewController(withIdentifier: "DirectoryController") as? DirectoryController)!
+
             viewController.brains.path = path
             navigationController!.pushViewController(viewController, animated: true)
 
+        } else if brains.isImage(atIndexPath: indexPath.row) {
+            imageURL = brains.contents![indexPath.row]
+            performSegue(withIdentifier: "imageSegue", sender: nil)
         }
     }
 

@@ -60,6 +60,7 @@
                     <connections>
                         <segue destination="iLW-5X-ZvZ" kind="show" identifier="folderSegue" id="u4S-8n-GH9"/>
                         <segue destination="SfM-I1-lAY" kind="show" identifier="fileSegue" id="F4n-SD-drX"/>
+                        <segue destination="ryX-zz-OLg" kind="show" identifier="imageSegue" id="OEP-n8-Lee"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QyJ-mR-SSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -316,6 +317,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GvU-VR-dkh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="760.79999999999995" y="-311.69415292353824"/>
+        </scene>
+        <!--Image View Controller-->
+        <scene sceneID="MCw-fG-0iQ">
+            <objects>
+                <viewController id="ryX-zz-OLg" customClass="ImageViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="m8h-f7-WtL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z3E-or-2ty">
+                                <rect key="frame" x="0.0" y="64" width="375" height="265"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="bT5-fY-4fb" firstAttribute="bottom" secondItem="z3E-or-2ty" secondAttribute="bottom" constant="294" id="PTE-N6-tQG"/>
+                            <constraint firstItem="z3E-or-2ty" firstAttribute="top" secondItem="bT5-fY-4fb" secondAttribute="top" id="QFz-ml-W61"/>
+                            <constraint firstItem="z3E-or-2ty" firstAttribute="trailing" secondItem="bT5-fY-4fb" secondAttribute="trailing" id="aKW-Q5-O12"/>
+                            <constraint firstItem="z3E-or-2ty" firstAttribute="leading" secondItem="bT5-fY-4fb" secondAttribute="leading" id="p7O-Ey-oQg"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="bT5-fY-4fb"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="z3E-or-2ty" id="4WU-PU-dsm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0rz-n2-dn8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1469.5999999999999" y="-312.59370314842579"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="er4-pw-wUL">
