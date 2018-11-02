@@ -12,6 +12,7 @@ class Brains: NSObject {
 
     var directoryVC = DirectoryController()
     var contents: [URL]?
+    var origContents: [URL]?
     var path: URL! {
         didSet {
             do {
@@ -20,6 +21,7 @@ class Brains: NSObject {
                                                                        options: FileManager
                                                                         .DirectoryEnumerationOptions
                                                                         .skipsHiddenFiles)
+                origContents = contents
             } catch let error as NSError {
                 print(error.localizedDescription)
                 contents = nil
@@ -41,11 +43,7 @@ class Brains: NSObject {
         let pathIndex = contents![atIndexPath]
         let myExtension = pathIndex.pathExtension
 
-        if imageFormats.contains(myExtension) {
-            return true
-        } else {
-            return false
-        }
+        return imageFormats.contains(myExtension) ? true : false
     }
 
     func sortTheConents(array: [URL]) {
@@ -56,17 +54,16 @@ class Brains: NSObject {
 
         for counter in 0..<tempArray.count {
             let index = counter
-            if isDirectoryAt(atIndexPath: index) {
-                arrayOfDirectories.append(array[counter])
-            } else {
+            
+            isDirectoryAt(atIndexPath: index) ?
+                arrayOfDirectories.append(array[counter]) :
                 arrayOfFiles.append(array[counter])
-            }
         }
-
-        let sortedArray = arrayOfDirectories.sorted{$0.lastPathComponent < $1.lastPathComponent} + arrayOfFiles.sorted{$0.lastPathComponent < $1.lastPathComponent}
+        let sortedDictionaryArray = arrayOfDirectories.sorted{$0.lastPathComponent < $1.lastPathComponent}
+        let sortedFilesArray = arrayOfFiles.sorted{$0.lastPathComponent < $1.lastPathComponent}
+        let sortedArray = sortedDictionaryArray + sortedFilesArray
 
         contents = sortedArray
-
     }
 
     func casting(bytes: Double) -> String {
@@ -109,5 +106,22 @@ class Brains: NSObject {
         }
 
         return (fileSize, fileAmount)
+    }
+    
+    func generatedTableFromArray(nonMutableArray: [URL], searchText: String) {
+        contents! = nonMutableArray
+        var tempArray: [URL]?
+        tempArray = contents!.filter{(title: URL) -> Bool in
+            if title.lastPathComponent.lowercased().contains(searchText.lowercased()) {
+                return true
+            } else if searchText == "" {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        contents = tempArray
+        sortTheConents(array: contents!)
     }
 }

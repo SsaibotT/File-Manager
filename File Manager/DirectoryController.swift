@@ -11,6 +11,7 @@ import UIKit
 class DirectoryController: UITableViewController,
 UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
+UISearchBarDelegate,
 CustomCellDelegator {
 
     lazy var brains = Brains()
@@ -28,6 +29,7 @@ CustomCellDelegator {
         brains.sortTheConents(array: brains.contents!)
 
         navigationItem.title = brains.path.lastPathComponent
+        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -36,7 +38,7 @@ CustomCellDelegator {
         navigationButtons()
     }
 
-    func navigationButtons () {
+    private func navigationButtons () {
         if navigationController!.viewControllers.count > 1 {
             let backToRoot = UIBarButtonItem.init(title: "Back To Root",
                                                   style: UIBarButtonItem.Style.plain,
@@ -69,7 +71,7 @@ CustomCellDelegator {
 
     // MARK: Actions
 
-    @objc func imageAction() {
+    @objc private func imageAction() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = UIImagePickerController.SourceType.savedPhotosAlbum
@@ -104,15 +106,15 @@ CustomCellDelegator {
         self.tableView.beginUpdates()
         self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
         self.tableView.endUpdates()
-
+        
         picker.dismiss(animated: true, completion: nil)
     }
 
-    @objc func backToRoot() {
+    @objc private func backToRoot() {
         navigationController?.popToRootViewController(animated: true)
     }
 
-    @objc func addAction() {
+    @objc private func addAction() {
 
         let alert = UIAlertController.init(title: "Creating Folder",
                                            message: "Enter the folders name",
@@ -122,16 +124,16 @@ CustomCellDelegator {
             UITextField.placeholder = "folders name"
         }
 
-        let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) { (_) in
+        let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) {[unowned self] (_) in
                 let textField = alert.textFields?.first?.text
 
                     if textField == "" {
-                        let failAlert = UIAlertController.init(title: "Fail",
+                        let failAlert = UIAlertController(title: "Fail",
                                                                message: "Name is invalid",
                                                                preferredStyle: UIAlertController.Style.alert)
-                        let failAction = UIAlertAction.init(title: "Ok",
+                        let failAction = UIAlertAction(title: "Ok",
                                                             style: UIAlertAction.Style.default,
-                                                            handler: { (_) in
+                                                            handler: {[unowned self] (_) in
                                                                 self.addAction()
                         })
 
@@ -149,7 +151,6 @@ CustomCellDelegator {
                                                                      attributes: nil)) != nil {
                             tempArray = self.brains.contents
                             tempArray?.insert(path, at: 0)
-                            print(path.path)
                             self.brains.contents = tempArray
 
                             self.brains.sortTheConents(array: self.brains.contents!)
@@ -167,7 +168,7 @@ CustomCellDelegator {
         present(alert, animated: true, completion: nil)
     }
 
-    @objc func editAction() {
+    @objc private func editAction() {
 
         if tableView.isEditing == true {
             tableView.setEditing(false, animated: true)
@@ -186,84 +187,79 @@ CustomCellDelegator {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cellIdentifier = "Cell"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell else {
+            return UITableViewCell()
+        }
+
+        cell.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
 
         if brains.isDirectoryAt(atIndexPath: indexPath.row) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell
-            cell!.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
-            cell!.cellImage.image = UIImage.init(named: "folder")
-            cell!.delegate = self
+            cell.cellImage.image = UIImage.init(named: "folder")
+            cell.delegate = self
 
-            return cell!
         } else if brains.isImage(atIndexPath: indexPath.row) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell
-            cell!.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
-            cell!.cellImage.image = UIImage.init(named: "image")
-            cell?.delegate = self
+            cell.cellImage.image = UIImage.init(named: "image")
+            cell.delegate = self
 
-            return cell!
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell
-            cell!.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
-            cell!.cellImage.image = UIImage.init(named: "file")
-            cell!.delegate = self
+            cell.cellImage.image = UIImage.init(named: "file")
+            cell.delegate = self
 
-            return cell!
         }
+        return cell
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.destination is FileViewController {
+        
+        switch segue.destination {
+        case is FileViewController:
             let fileName = brains.contents![indexPathOfButton!.row]
-
+            
             var attributes: NSDictionary?
             do {
                 attributes = try FileManager.default.attributesOfItem(atPath: fileName.path) as NSDictionary
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-
-            let vcontr = segue.destination as? FileViewController
-
-            vcontr?.name = fileName.lastPathComponent
-            vcontr?.size = brains.casting(bytes: Double((attributes?.fileSize())!))
-            vcontr?.creationDate = "\((attributes!.fileCreationDate())!)"
-            vcontr?.modifiedDate = "\((attributes!.fileModificationDate())!)"
-        }
-
-        if segue.destination is FolderViewController {
+            
+            guard let vcontr = segue.destination as? FileViewController else {return}
+            
+            vcontr.name = fileName.lastPathComponent
+            vcontr.size = brains.casting(bytes: Double((attributes?.fileSize())!))
+            vcontr.creationDate = "\((attributes!.fileCreationDate())!)"
+            vcontr.modifiedDate = "\((attributes!.fileModificationDate())!)"
+        case is FolderViewController:
             let folderName = brains.contents![indexPathOfButton!.row]
-
+            
             var attributes: NSDictionary?
             do {
                 attributes = try FileManager.default.attributesOfItem(atPath: folderName.path) as NSDictionary
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-
+            
             let folderSize = brains.casting(bytes: Double(brains.folderSizeAndAmount(folderPath: folderName.path).0))
-            let vcontr = segue.destination as? FolderViewController
-
-            vcontr?.name = folderName.lastPathComponent
-            vcontr?.size = folderSize
-            vcontr?.amountOfFiles = "\(brains.folderSizeAndAmount(folderPath: folderName.path).1)"
-            vcontr?.creationDate  = "\((attributes!.fileCreationDate())!)"
-            vcontr?.modifiedDate  = "\((attributes!.fileModificationDate())!)"
-
-        }
-
-        if segue.destination is ImageViewController {
+            guard let vcontr = segue.destination as? FolderViewController else {return}
+            
+            vcontr.name = folderName.lastPathComponent
+            vcontr.size = folderSize
+            vcontr.amountOfFiles = "\(brains.folderSizeAndAmount(folderPath: folderName.path).1)"
+            vcontr.creationDate  = "\((attributes!.fileCreationDate())!)"
+            vcontr.modifiedDate  = "\((attributes!.fileModificationDate())!)"
+        case is ImageViewController:
             let url = imageURL
             var data: Data!
-
+            
             do {
                 data = try Data(contentsOf: url!)
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-
-            let vcontr = segue.destination as? ImageViewController
-
-            vcontr?.image = UIImage(data: data!)
+            
+            guard let vcontr = segue.destination as? ImageViewController else {return}
+            vcontr.image = UIImage(data: data!)
+        default:
+            break
         }
     }
 
@@ -276,8 +272,6 @@ CustomCellDelegator {
 
         if editingStyle == UITableViewCell.EditingStyle.delete {
             let name = brains.contents![indexPath.row]
-            print(name.path)
-
             var tempArray: [URL]?
 
             if (try? FileManager.default.removeItem(atPath: name.path)) != nil {
@@ -332,5 +326,22 @@ CustomCellDelegator {
                 performSegue(withIdentifier: "fileSegue", sender: nil)
             }
         }
+    }
+    
+    // MARK: Search bar delegate
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.text = nil
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        brains.generatedTableFromArray(nonMutableArray: brains.origContents!, searchText: searchText)
+        tableView.reloadData()
     }
 }
