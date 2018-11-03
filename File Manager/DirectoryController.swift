@@ -18,6 +18,7 @@ CustomCellDelegator {
 
     var indexPathOfButton: IndexPath?
     var imageURL: URL?
+    var mySearchText = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +27,7 @@ CustomCellDelegator {
             brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
 
-        brains.sortTheConents(array: brains.contents!)
+        brains.sortTheConents(array: brains.filteredContents)
 
         navigationItem.title = brains.path.lastPathComponent
         tableView.reloadData()
@@ -90,22 +91,21 @@ CustomCellDelegator {
         } catch let error as NSError {
             print(error.localizedDescription)
         }
+        
+        self.brains.contents?.insert(name, at: 0)
+        
+        if name.lastPathComponent.contains(mySearchText) || mySearchText == "" {
+            self.brains.filteredContents.insert(name, at: 0)
 
-        var tempArray: [URL]?
+            self.brains.sortTheConents(array: self.brains.filteredContents)
 
-        tempArray = self.brains.contents
-        tempArray?.insert(name, at: 0)
+            let row = self.brains.filteredContents.index(of: name)
+            let indexPath1 = IndexPath.init(row: row!, section: 0)
 
-        self.brains.contents = tempArray
-
-        self.brains.sortTheConents(array: self.brains.contents!)
-
-        let row = self.brains.contents!.index(of: name)
-        let indexPath1 = IndexPath.init(row: row!, section: 0)
-
-        self.tableView.beginUpdates()
-        self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
-        self.tableView.endUpdates()
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
+            self.tableView.endUpdates()
+        }
         
         picker.dismiss(animated: true, completion: nil)
     }
@@ -127,7 +127,7 @@ CustomCellDelegator {
         let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) {[unowned self] (_) in
                 let textField = alert.textFields?.first?.text
 
-                    if textField == "" {
+            if textField == "" || self.brains.contents!.map({$0.lastPathComponent}).contains(textField) {
                         let failAlert = UIAlertController(title: "Fail",
                                                                message: "Name is invalid",
                                                                preferredStyle: UIAlertController.Style.alert)
@@ -144,23 +144,22 @@ CustomCellDelegator {
                         let name = textField
                         let path = self.brains.path.appendingPathComponent(name!)
 
-                        var tempArray: [URL]?
-
                         if (try? FileManager.default.createDirectory(atPath: path.path,
                                                                      withIntermediateDirectories: true,
                                                                      attributes: nil)) != nil {
-                            tempArray = self.brains.origContents
-                            tempArray?.append(path)
-                            self.brains.contents = tempArray
                             
-                            self.brains.sortTheConents(array: self.brains.contents!)
-
-                            let row = self.brains.contents!.index(of: path)
-                            let indexPath1 = IndexPath.init(row: row!, section: 0)
-
-                            self.tableView.beginUpdates()
-                            self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
-                            self.tableView.endUpdates()
+                            self.brains.contents?.append(path)
+                            
+                            if path.lastPathComponent.contains(self.mySearchText) || self.mySearchText == "" {
+                                self.brains.filteredContents.append(path)
+                                self.brains.sortTheConents(array: self.brains.filteredContents)
+                                let row = self.brains.filteredContents.index(of: path)
+                                let indexPath1 = IndexPath.init(row: row!, section: 0)
+                                
+                                self.tableView.beginUpdates()
+                                self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
+                                self.tableView.endUpdates()
+                            }
                         }
                 }
         }
@@ -181,7 +180,7 @@ CustomCellDelegator {
     // MARK: Table view datasource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return brains.contents!.count
+        return brains.filteredContents.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -191,7 +190,7 @@ CustomCellDelegator {
             return UITableViewCell()
         }
 
-        cell.nameLabel.text = brains.contents![indexPath.row].lastPathComponent
+        cell.nameLabel.text = brains.filteredContents[indexPath.row].lastPathComponent
 
         if brains.isDirectoryAt(atIndexPath: indexPath.row) {
             cell.cellImage.image = UIImage.init(named: "folder")
@@ -271,14 +270,13 @@ CustomCellDelegator {
                             forRowAt indexPath: IndexPath) {
 
         if editingStyle == UITableViewCell.EditingStyle.delete {
-            let name = brains.contents![indexPath.row]
-            var tempArray: [URL]?
+            let name = brains.filteredContents[indexPath.row]
 
             if (try? FileManager.default.removeItem(atPath: name.path)) != nil {
 
-                tempArray = brains.contents
-                tempArray?.remove(at: indexPath.row)
-                brains.contents = tempArray
+                brains.contents!.remove(at: (brains.contents?.map({$0.lastPathComponent})
+                    .index(of: name.lastPathComponent))!)
+                brains.filteredContents.remove(at: indexPath.row)
 
                 tableView.beginUpdates()
                 tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
@@ -295,7 +293,7 @@ CustomCellDelegator {
         tableView.deselectRow(at: indexPath, animated: true)
 
         if brains.isDirectoryAt(atIndexPath: indexPath.row) {
-            let fileName = brains.contents![indexPath.row].lastPathComponent
+            let fileName = brains.filteredContents[indexPath.row].lastPathComponent
             let path = brains.path.appendingPathComponent(fileName)
 
             let viewController: DirectoryController = (storyboard?
@@ -305,7 +303,7 @@ CustomCellDelegator {
             navigationController!.pushViewController(viewController, animated: true)
 
         } else if brains.isImage(atIndexPath: indexPath.row) {
-            imageURL = brains.contents![indexPath.row]
+            imageURL = brains.filteredContents[indexPath.row]
             performSegue(withIdentifier: "imageSegue", sender: nil)
         }
     }
@@ -340,7 +338,8 @@ CustomCellDelegator {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        brains.generatedTableFromArray(nonMutableArray: brains.origContents!, searchText: searchText)
+        mySearchText = searchText
+        brains.generatedTableFromArray(searchText: searchText)
         tableView.reloadData()
     }
 }

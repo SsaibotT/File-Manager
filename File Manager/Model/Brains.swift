@@ -12,7 +12,7 @@ class Brains: NSObject {
 
     var directoryVC = DirectoryController()
     var contents: [URL]?
-    var origContents: [URL]?
+    var filteredContents = [URL]()
     var path: URL! {
         didSet {
             do {
@@ -21,7 +21,7 @@ class Brains: NSObject {
                                                                        options: FileManager
                                                                         .DirectoryEnumerationOptions
                                                                         .skipsHiddenFiles)
-                origContents = contents
+                filteredContents = contents!
             } catch let error as NSError {
                 print(error.localizedDescription)
                 contents = nil
@@ -32,7 +32,7 @@ class Brains: NSObject {
     func isDirectoryAt(atIndexPath: Int) -> Bool {
 
         var isDirectory = ObjCBool(false)
-        let pathAtIndex = contents![atIndexPath]
+        let pathAtIndex = filteredContents[atIndexPath]
         FileManager.default.fileExists(atPath: pathAtIndex.path, isDirectory: &isDirectory)
         return isDirectory.boolValue
     }
@@ -40,7 +40,7 @@ class Brains: NSObject {
     func isImage(atIndexPath: Int) -> Bool {
 
         let imageFormats = ["jpg", "png", "gif", "jpeg"]
-        let pathIndex = contents![atIndexPath]
+        let pathIndex = filteredContents[atIndexPath]
         let myExtension = pathIndex.pathExtension
 
         return imageFormats.contains(myExtension) ? true : false
@@ -63,7 +63,7 @@ class Brains: NSObject {
         let sortedFilesArray = arrayOfFiles.sorted {$0.lastPathComponent < $1.lastPathComponent}
         let sortedArray = sortedDictionaryArray + sortedFilesArray
 
-        contents = sortedArray
+        filteredContents = sortedArray
     }
 
     func casting(bytes: Double) -> String {
@@ -108,8 +108,8 @@ class Brains: NSObject {
         return (fileSize, fileAmount)
     }
     
-    func generatedTableFromArray(nonMutableArray: [URL], searchText: String) {
-        contents! = nonMutableArray
+    func generatedTableFromArray(searchText: String) {
+
         var tempArray: [URL]?
         tempArray = contents!.filter {(title: URL) -> Bool in
             if title.lastPathComponent.lowercased().contains(searchText.lowercased()) {
@@ -121,7 +121,7 @@ class Brains: NSObject {
             }
         }
         
-        contents = tempArray
-        sortTheConents(array: contents!)
+        filteredContents = tempArray!
+        sortTheConents(array: filteredContents)
     }
 }
