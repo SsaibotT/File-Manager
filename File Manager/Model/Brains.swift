@@ -59,8 +59,8 @@ class Brains: NSObject {
                 arrayOfDirectories.append(array[counter]) :
                 arrayOfFiles.append(array[counter])
         }
-        let sortedDictionaryArray = arrayOfDirectories.sorted{$0.lastPathComponent < $1.lastPathComponent}
-        let sortedFilesArray = arrayOfFiles.sorted{$0.lastPathComponent < $1.lastPathComponent}
+        let sortedDictionaryArray = arrayOfDirectories.sorted {$0.lastPathComponent < $1.lastPathComponent}
+        let sortedFilesArray = arrayOfFiles.sorted {$0.lastPathComponent < $1.lastPathComponent}
         let sortedArray = sortedDictionaryArray + sortedFilesArray
 
         contents = sortedArray
@@ -111,7 +111,7 @@ class Brains: NSObject {
     func generatedTableFromArray(nonMutableArray: [URL], searchText: String) {
         contents! = nonMutableArray
         var tempArray: [URL]?
-        tempArray = contents!.filter{(title: URL) -> Bool in
+        tempArray = contents!.filter {(title: URL) -> Bool in
             if title.lastPathComponent.lowercased().contains(searchText.lowercased()) {
                 return true
             } else if searchText == "" {

@@ -79,7 +79,7 @@ CustomCellDelegator {
     }
 
     @objc func imagePickerController(_ picker: UIImagePickerController,
-                                     didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+                                     didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
         let image = info[.imageURL] as? URL
 
@@ -149,10 +149,10 @@ CustomCellDelegator {
                         if (try? FileManager.default.createDirectory(atPath: path.path,
                                                                      withIntermediateDirectories: true,
                                                                      attributes: nil)) != nil {
-                            tempArray = self.brains.contents
-                            tempArray?.insert(path, at: 0)
+                            tempArray = self.brains.origContents
+                            tempArray?.append(path)
                             self.brains.contents = tempArray
-
+                            
                             self.brains.sortTheConents(array: self.brains.contents!)
 
                             let row = self.brains.contents!.index(of: path)
@@ -337,7 +337,6 @@ CustomCellDelegator {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.setShowsCancelButton(false, animated: true)
-        searchBar.text = nil
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
