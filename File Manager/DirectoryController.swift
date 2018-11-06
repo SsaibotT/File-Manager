@@ -91,19 +91,19 @@ UISearchBarDelegate {
             print(error.localizedDescription)
         }
         
-        self.brains.contents?.insert(name, at: 0)
+        brains.contents?.insert(name, at: 0)
         
         if name.lastPathComponent.contains(mySearchText) || mySearchText == "" {
-            self.brains.filteredContents.insert(name, at: 0)
+            brains.filteredContents.insert(name, at: 0)
 
-            self.brains.sortTheConents(array: self.brains.filteredContents)
+            brains.sortTheConents(array: brains.filteredContents)
 
-            let row = self.brains.filteredContents.index(of: name)
+            let row = brains.filteredContents.index(of: name)
             let indexPath1 = IndexPath.init(row: row!, section: 0)
 
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
-            self.tableView.endUpdates()
+            tableView.beginUpdates()
+            tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
+            tableView.endUpdates()
         }
         
         picker.dismiss(animated: true, completion: nil)
@@ -124,43 +124,43 @@ UISearchBarDelegate {
         }
 
         let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) {[unowned self] (_) in
-                let textField = alert.textFields?.first?.text
+            let textField = alert.textFields?.first?.text
 
             if textField == "" || self.brains.contents!.map({$0.lastPathComponent}).contains(textField) {
-                        let failAlert = UIAlertController(title: "Fail",
-                                                               message: "Name is invalid",
-                                                               preferredStyle: UIAlertController.Style.alert)
-                        let failAction = UIAlertAction(title: "Ok",
-                                                            style: UIAlertAction.Style.default,
-                                                            handler: {[unowned self] (_) in
-                                                                self.addAction()
-                        })
-
-                        failAlert.addAction(failAction)
-                        self.present(failAlert, animated: true, completion: nil)
-
-                    } else {
-                        let name = textField
-                        let path = self.brains.path.appendingPathComponent(name!)
-
-                        if (try? FileManager.default.createDirectory(atPath: path.path,
-                                                                     withIntermediateDirectories: true,
-                                                                     attributes: nil)) != nil {
-                            
-                            self.brains.contents?.append(path)
-                            
-                            if path.lastPathComponent.contains(self.mySearchText) || self.mySearchText == "" {
-                                self.brains.filteredContents.append(path)
-                                self.brains.sortTheConents(array: self.brains.filteredContents)
-                                let row = self.brains.filteredContents.index(of: path)
-                                let indexPath1 = IndexPath.init(row: row!, section: 0)
-                                
-                                self.tableView.beginUpdates()
-                                self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
-                                self.tableView.endUpdates()
-                            }
-                        }
+                let failAlert = UIAlertController(title: "Fail",
+                                                  message: "Name is invalid",
+                                                  preferredStyle: UIAlertController.Style.alert)
+                let failAction = UIAlertAction(title: "Ok",
+                                               style: UIAlertAction.Style.default,
+                                               handler: {[unowned self] (_) in
+                                                self.addAction()
+                })
+                
+                failAlert.addAction(failAction)
+                self.present(failAlert, animated: true, completion: nil)
+                
+            } else {
+                let name = textField
+                let path = self.brains.path.appendingPathComponent(name!)
+                
+                if (try? FileManager.default.createDirectory(atPath: path.path,
+                                                             withIntermediateDirectories: true,
+                                                             attributes: nil)) != nil {
+                    
+                    self.brains.contents?.append(path)
+                    
+                    if path.lastPathComponent.contains(self.mySearchText) || self.mySearchText == "" {
+                        self.brains.filteredContents.append(path)
+                        self.brains.sortTheConents(array: self.brains.filteredContents)
+                        let row = self.brains.filteredContents.index(of: path)
+                        let indexPath1 = IndexPath.init(row: row!, section: 0)
+                        
+                        self.tableView.beginUpdates()
+                        self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
+                        self.tableView.endUpdates()
+                    }
                 }
+            }
         }
         alert.addAction(defaultAction)
         present(alert, animated: true, completion: nil)
@@ -174,22 +174,6 @@ UISearchBarDelegate {
             tableView.setEditing(true, animated: true)
         }
 
-    }
-    
-    @objc func callSegueFromInfoButton(sender: UIButton) {
-        
-        let cell: UITableViewCell? = sender.superCell()
-        
-        if cell != nil {
-            
-            indexPathOfButton = self.tableView.indexPath(for: cell!)
-            
-            if brains.isDirectoryAt(atIndexPath: indexPathOfButton!.row) {
-                performSegue(withIdentifier: "folderSegue", sender: nil)
-            } else {
-                performSegue(withIdentifier: "fileSegue", sender: nil)
-            }
-        }
     }
 
     // MARK: Table view datasource
@@ -205,8 +189,13 @@ UISearchBarDelegate {
             return UITableViewCell()
         }
         
-        cell.infoButton.addTarget(self, action: #selector(DirectoryController.callSegueFromInfoButton(sender: )),
-                                  for: UIControl.Event.touchUpInside)
+        cell.pasingInfoForButton = {
+            if self.brains.isDirectoryAt(atIndexPath: indexPath.row) {
+                self.performSegue(withIdentifier: "folderSegue", sender: cell)
+            } else {
+                self.performSegue(withIdentifier: "fileSegue", sender: cell)
+            }
+        }
 
         if brains.isDirectoryAt(atIndexPath: indexPath.row) {
             cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
@@ -226,9 +215,11 @@ UISearchBarDelegate {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        guard let indexPath = tableView.indexPath(for: (sender as? UITableViewCell)!) else {return}
+        
         switch segue.destination {
         case is FileViewController:
-            let fileName = brains.filteredContents[indexPathOfButton!.row]
+            let fileName = brains.filteredContents[indexPath.row]
             
             var attributes: NSDictionary?
             do {
@@ -245,7 +236,7 @@ UISearchBarDelegate {
                                          modifiedDate: "\((attributes!.fileModificationDate())!)")
             
         case is FolderViewController:
-            let folderName = brains.filteredContents[indexPathOfButton!.row]
+            let folderName = brains.filteredContents[indexPath.row]
             
             var attributes: NSDictionary?
             do {
