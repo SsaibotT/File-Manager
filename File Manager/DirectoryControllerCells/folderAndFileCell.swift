@@ -10,24 +10,17 @@ import UIKit
 
 class FolderAndFileCell: UITableViewCell {
 
-    var delegate: CustomCellDelegator!
-
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var cellImage: UIImageView!
-
-    @IBAction func infoButtonAction(_ sender: UIButton) {
-
-        if self.delegate != nil {
-            self.delegate.callSegueFromCell(sender: sender)
-        }
+    @IBOutlet weak var infoButton: UIButton!
+    
+    func cellConfig(name: String, image: UIImage) {
+        nameLabel.text = name
+        cellImage.image = image
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-}
-
-protocol CustomCellDelegator {
-    func callSegueFromCell(sender: UIButton)
 }

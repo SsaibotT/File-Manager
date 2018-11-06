@@ -11,8 +11,7 @@ import UIKit
 class DirectoryController: UITableViewController,
 UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
-UISearchBarDelegate,
-CustomCellDelegator {
+UISearchBarDelegate {
 
     lazy var brains = Brains()
 
@@ -176,6 +175,22 @@ CustomCellDelegator {
         }
 
     }
+    
+    @objc func callSegueFromInfoButton(sender: UIButton) {
+        
+        let cell: UITableViewCell? = sender.superCell()
+        
+        if cell != nil {
+            
+            indexPathOfButton = self.tableView.indexPath(for: cell!)
+            
+            if brains.isDirectoryAt(atIndexPath: indexPathOfButton!.row) {
+                performSegue(withIdentifier: "folderSegue", sender: nil)
+            } else {
+                performSegue(withIdentifier: "fileSegue", sender: nil)
+            }
+        }
+    }
 
     // MARK: Table view datasource
 
@@ -189,20 +204,21 @@ CustomCellDelegator {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? FolderAndFileCell else {
             return UITableViewCell()
         }
-
-        cell.nameLabel.text = brains.filteredContents[indexPath.row].lastPathComponent
+        
+        cell.infoButton.addTarget(self, action: #selector(DirectoryController.callSegueFromInfoButton(sender: )),
+                                  for: UIControl.Event.touchUpInside)
 
         if brains.isDirectoryAt(atIndexPath: indexPath.row) {
-            cell.cellImage.image = UIImage.init(named: "folder")
-            cell.delegate = self
+            cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
+                            image: UIImage(named: "folder")!)
 
         } else if brains.isImage(atIndexPath: indexPath.row) {
-            cell.cellImage.image = UIImage.init(named: "image")
-            cell.delegate = self
+            cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
+                            image: UIImage(named: "image")!)
 
         } else {
-            cell.cellImage.image = UIImage.init(named: "file")
-            cell.delegate = self
+            cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
+                            image: UIImage(named: "file")!)
 
         }
         return cell
@@ -212,7 +228,7 @@ CustomCellDelegator {
         
         switch segue.destination {
         case is FileViewController:
-            let fileName = brains.contents![indexPathOfButton!.row]
+            let fileName = brains.filteredContents[indexPathOfButton!.row]
             
             var attributes: NSDictionary?
             do {
@@ -223,12 +239,13 @@ CustomCellDelegator {
             
             guard let vcontr = segue.destination as? FileViewController else {return}
             
-            vcontr.name = fileName.lastPathComponent
-            vcontr.size = brains.casting(bytes: Double((attributes?.fileSize())!))
-            vcontr.creationDate = "\((attributes!.fileCreationDate())!)"
-            vcontr.modifiedDate = "\((attributes!.fileModificationDate())!)"
+            vcontr.configFileViewControl(name: fileName.lastPathComponent,
+                                         size: brains.casting(bytes: Double((attributes?.fileSize())!)),
+                                         creationDate: "\((attributes!.fileCreationDate())!)",
+                                         modifiedDate: "\((attributes!.fileModificationDate())!)")
+            
         case is FolderViewController:
-            let folderName = brains.contents![indexPathOfButton!.row]
+            let folderName = brains.filteredContents[indexPathOfButton!.row]
             
             var attributes: NSDictionary?
             do {
@@ -240,11 +257,11 @@ CustomCellDelegator {
             let folderSize = brains.casting(bytes: Double(brains.folderSizeAndAmount(folderPath: folderName.path).0))
             guard let vcontr = segue.destination as? FolderViewController else {return}
             
-            vcontr.name = folderName.lastPathComponent
-            vcontr.size = folderSize
-            vcontr.amountOfFiles = "\(brains.folderSizeAndAmount(folderPath: folderName.path).1)"
-            vcontr.creationDate  = "\((attributes!.fileCreationDate())!)"
-            vcontr.modifiedDate  = "\((attributes!.fileModificationDate())!)"
+            vcontr.configFolderViewControl(name: folderName.lastPathComponent,
+                                           size: folderSize,
+                                           amountOfFiles: "\(brains.folderSizeAndAmount(folderPath: folderName.path).1)",
+                                           creationDate: "\((attributes!.fileCreationDate())!)",
+                                           modifiedDate: "\((attributes!.fileModificationDate())!)")
         case is ImageViewController:
             let url = imageURL
             var data: Data!
@@ -254,9 +271,9 @@ CustomCellDelegator {
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-            
             guard let vcontr = segue.destination as? ImageViewController else {return}
-            vcontr.image = UIImage(data: data!)
+            
+            vcontr.configImageViewController(image: UIImage(data: data!)!)
         default:
             break
         }
@@ -305,24 +322,6 @@ CustomCellDelegator {
         } else if brains.isImage(atIndexPath: indexPath.row) {
             imageURL = brains.filteredContents[indexPath.row]
             performSegue(withIdentifier: "imageSegue", sender: nil)
-        }
-    }
-
-    // MARK: Custom cell delegate
-
-    func callSegueFromCell(sender: UIButton) {
-
-        let cell: UITableViewCell? = sender.superCell()
-
-        if cell != nil {
-
-            indexPathOfButton = self.tableView.indexPath(for: cell!)
-
-            if brains.isDirectoryAt(atIndexPath: indexPathOfButton!.row) {
-                performSegue(withIdentifier: "folderSegue", sender: nil)
-            } else {
-                performSegue(withIdentifier: "fileSegue", sender: nil)
-            }
         }
     }
     

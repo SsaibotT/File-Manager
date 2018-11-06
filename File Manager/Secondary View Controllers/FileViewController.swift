@@ -28,4 +28,14 @@ class FileViewController: UIViewController {
         creationDateLabel.text = creationDate
         modifiedDateLabel.text = modifiedDate
     }
+    
+    func configFileViewControl(name: String,
+                               size: String,
+                               creationDate: String,
+                               modifiedDate: String) {
+        self.name = name
+        self.size = size
+        self.creationDate = creationDate
+        self.modifiedDate = modifiedDate
+    }
 }

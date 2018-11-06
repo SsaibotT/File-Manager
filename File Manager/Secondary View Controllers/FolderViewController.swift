@@ -31,4 +31,16 @@ class FolderViewController: UIViewController {
         creationDateLabel.text  = creationDate
         modofiedDateLabel.text  = modifiedDate
     }
+    
+    func configFolderViewControl(name: String,
+                                 size: String,
+                                 amountOfFiles: String,
+                                 creationDate: String,
+                                 modifiedDate: String) {
+        self.name = name
+        self.size = size
+        self.amountOfFiles = amountOfFiles
+        self.creationDate = creationDate
+        self.modifiedDate = modifiedDate
+    }
 }

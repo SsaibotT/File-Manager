@@ -20,4 +20,8 @@ class ImageViewController: UIViewController {
         imageView.image = image
 
     }
+    
+    func configImageViewController(image: UIImage) {
+        self.image = image
+    }
 }
