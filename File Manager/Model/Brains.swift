@@ -11,59 +11,41 @@ import UIKit
 class Brains: NSObject {
 
     var directoryVC = DirectoryController()
-    var contents: [URL]?
-    var filteredContents = [URL]()
+    var contents = [Content]()
+    var filteredContents = [Content]()
     var path: URL! {
         didSet {
             do {
-                contents = try FileManager.default.contentsOfDirectory(at: path,
+                let urls = try FileManager.default.contentsOfDirectory(at: path,
                                                                        includingPropertiesForKeys: nil,
                                                                        options: FileManager
                                                                         .DirectoryEnumerationOptions
                                                                         .skipsHiddenFiles)
-                filteredContents = contents!
+                for url in urls {
+                    contents.append(Content(url: url))
+                }
+                
+                filteredContents = contents
             } catch let error as NSError {
                 print(error.localizedDescription)
-                contents = nil
             }
         }
     }
 
-    func isDirectoryAt(atIndexPath: Int) -> Bool {
+    func sortTheContents(array: [Content]) {
 
-        var isDirectory = ObjCBool(false)
-        let pathAtIndex = filteredContents[atIndexPath]
-        FileManager.default.fileExists(atPath: pathAtIndex.path, isDirectory: &isDirectory)
-        return isDirectory.boolValue
-    }
+        var arrayOfDirectories = [Content]()
+        var arrayOfFiles = [Content]()
 
-    func isImage(atIndexPath: Int) -> Bool {
-
-        let imageFormats = ["jpg", "png", "gif", "jpeg"]
-        let pathIndex = filteredContents[atIndexPath]
-        let myExtension = pathIndex.pathExtension
-
-        return imageFormats.contains(myExtension) ? true : false
-    }
-
-    func sortTheConents(array: [URL]) {
-
-        let tempArray = array
-        var arrayOfDirectories = [URL]()
-        var arrayOfFiles = [URL]()
-
-        for counter in 0..<tempArray.count {
-            let index = counter
-            
-            isDirectoryAt(atIndexPath: index) ?
-                arrayOfDirectories.append(array[counter]) :
-                arrayOfFiles.append(array[counter])
+        for content in array {
+            content.getType() == Type.directory ?
+                arrayOfDirectories.append(content) :
+                arrayOfFiles.append(content)
         }
-        let sortedDictionaryArray = arrayOfDirectories.sorted {$0.lastPathComponent < $1.lastPathComponent}
-        let sortedFilesArray = arrayOfFiles.sorted {$0.lastPathComponent < $1.lastPathComponent}
-        let sortedArray = sortedDictionaryArray + sortedFilesArray
-
-        filteredContents = sortedArray
+        
+        let sortedDictionaryArray = arrayOfDirectories.sorted {$0.url!.lastPathComponent < $1.url!.lastPathComponent}
+        let sortedFilesArray = arrayOfFiles.sorted {$0.url!.lastPathComponent < $1.url!.lastPathComponent}
+        filteredContents = sortedDictionaryArray + sortedFilesArray
     }
 
     func casting(bytes: Double) -> String {
@@ -110,9 +92,8 @@ class Brains: NSObject {
     
     func generatedTableFromArray(searchText: String) {
 
-        var tempArray: [URL]?
-        tempArray = contents!.filter {(title: URL) -> Bool in
-            if title.lastPathComponent.lowercased().contains(searchText.lowercased()) {
+        filteredContents = contents.filter {(title: Content) -> Bool in
+            if title.url!.lastPathComponent.lowercased().contains(searchText.lowercased()) {
                 return true
             } else if searchText == "" {
                 return true
@@ -121,7 +102,6 @@ class Brains: NSObject {
             }
         }
         
-        filteredContents = tempArray!
-        sortTheConents(array: filteredContents)
+        sortTheContents(array: filteredContents)
     }
 }

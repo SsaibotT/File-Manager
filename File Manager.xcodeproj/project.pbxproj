@@ -12,6 +12,9 @@
 		C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18C218869BA009036EA /* FolderAndFileCell.swift */; };
 		C537C18F21886D75009036EA /* Brains.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18E21886D75009036EA /* Brains.swift */; };
 		C537C19221887350009036EA /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C19121887350009036EA /* extensions.swift */; };
+		C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8621931DFD00BE9476 /* PDFViewController.swift */; };
+		C5631C8921932F8900BE9476 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8821932F8900BE9476 /* TextViewController.swift */; };
+		C5631C8B2193910900BE9476 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8A2193910900BE9476 /* Content.swift */; };
 		C5C0A917218338CF004A7F69 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C0A916218338CF004A7F69 /* FileViewController.swift */; };
 		C5DE221F2181D741003376B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DE221E2181D741003376B3 /* AppDelegate.swift */; };
 		C5DE22242181D741003376B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5DE22222181D741003376B3 /* Main.storyboard */; };
@@ -30,6 +33,9 @@
 		C537C18C218869BA009036EA /* FolderAndFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAndFileCell.swift; sourceTree = "<group>"; };
 		C537C18E21886D75009036EA /* Brains.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brains.swift; sourceTree = "<group>"; };
 		C537C19121887350009036EA /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
+		C5631C8621931DFD00BE9476 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
+		C5631C8821932F8900BE9476 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		C5631C8A2193910900BE9476 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
 		C5C0A916218338CF004A7F69 /* FileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
 		C5DE221B2181D741003376B3 /* File Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "File Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5DE221E2181D741003376B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -76,8 +82,16 @@
 			children = (
 				C537C18E21886D75009036EA /* Brains.swift */,
 				C537C19121887350009036EA /* extensions.swift */,
+				C5631C8A2193910900BE9476 /* Content.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		C5631C8C219399FF00BE9476 /* VievModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = VievModel;
 			sourceTree = "<group>";
 		};
 		C5C0A918218338DD004A7F69 /* Secondary View Controllers */ = {
@@ -86,6 +100,8 @@
 				C5C0A916218338CF004A7F69 /* FileViewController.swift */,
 				C5F7C79A2184A0EC009368B3 /* FolderViewController.swift */,
 				C5F7721A218B08770091EBBB /* ImageViewController.swift */,
+				C5631C8621931DFD00BE9476 /* PDFViewController.swift */,
+				C5631C8821932F8900BE9476 /* TextViewController.swift */,
 			);
 			path = "Secondary View Controllers";
 			sourceTree = "<group>";
@@ -120,6 +136,7 @@
 		C5DE221D2181D741003376B3 /* File Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C5631C8C219399FF00BE9476 /* VievModel */,
 				C5DE221E2181D741003376B3 /* AppDelegate.swift */,
 				C5DE22342181D956003376B3 /* DirectoryController.swift */,
 				C5DE22222181D741003376B3 /* Main.storyboard */,
@@ -250,10 +267,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */,
 				C5C0A917218338CF004A7F69 /* FileViewController.swift in Sources */,
 				C5F7C79B2184A0EC009368B3 /* FolderViewController.swift in Sources */,
+				C5631C8B2193910900BE9476 /* Content.swift in Sources */,
 				C5DE22352181D956003376B3 /* DirectoryController.swift in Sources */,
 				C537C19221887350009036EA /* extensions.swift in Sources */,
+				C5631C8921932F8900BE9476 /* TextViewController.swift in Sources */,
 				C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */,
 				C537C18F21886D75009036EA /* Brains.swift in Sources */,
 				C5F7721B218B08770091EBBB /* ImageViewController.swift in Sources */,

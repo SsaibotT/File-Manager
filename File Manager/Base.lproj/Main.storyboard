@@ -74,6 +74,8 @@
                         <segue destination="iLW-5X-ZvZ" kind="show" identifier="folderSegue" id="u4S-8n-GH9"/>
                         <segue destination="SfM-I1-lAY" kind="show" identifier="fileSegue" id="F4n-SD-drX"/>
                         <segue destination="ryX-zz-OLg" kind="show" identifier="imageSegue" id="OEP-n8-Lee"/>
+                        <segue destination="gTA-nd-OJI" kind="show" identifier="pdfSegue" id="HnI-wM-zg9"/>
+                        <segue destination="yqo-Gb-eXv" kind="show" identifier="textSegue" id="EtW-7H-DiQ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QyJ-mR-SSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -186,7 +188,70 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ezx-5K-ubD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760.79999999999995" y="493.40329835082463"/>
+            <point key="canvasLocation" x="762" y="319"/>
+        </scene>
+        <!--Text View Controller-->
+        <scene sceneID="gCa-Rq-ZAF">
+            <objects>
+                <viewController id="yqo-Gb-eXv" customClass="TextViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gbV-YI-iXK">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DII-Dn-kr4">
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DII-Dn-kr4" firstAttribute="trailing" secondItem="ZWM-6N-eAW" secondAttribute="trailing" id="Jtm-xW-1hX"/>
+                            <constraint firstItem="DII-Dn-kr4" firstAttribute="leading" secondItem="ZWM-6N-eAW" secondAttribute="leading" id="NpI-5F-OMx"/>
+                            <constraint firstItem="DII-Dn-kr4" firstAttribute="top" secondItem="ZWM-6N-eAW" secondAttribute="top" id="Zmb-eq-EE7"/>
+                            <constraint firstItem="DII-Dn-kr4" firstAttribute="bottom" secondItem="ZWM-6N-eAW" secondAttribute="bottom" id="e4n-bH-Kvv"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZWM-6N-eAW"/>
+                    </view>
+                    <connections>
+                        <outlet property="txtView" destination="DII-Dn-kr4" id="0eJ-M6-obV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TVT-TZ-7BD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1650" y="600"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Pdx-Tu-Ysw">
+            <objects>
+                <viewController id="gTA-nd-OJI" customClass="PDFViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sle-HV-6ui">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AXS-0R-ykl" customClass="PDFView">
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="AXS-0R-ykl" firstAttribute="bottom" secondItem="tJf-Kj-czV" secondAttribute="bottom" id="2WX-2q-zGV"/>
+                            <constraint firstItem="AXS-0R-ykl" firstAttribute="leading" secondItem="tJf-Kj-czV" secondAttribute="leading" id="VAP-fg-msm"/>
+                            <constraint firstItem="AXS-0R-ykl" firstAttribute="trailing" secondItem="tJf-Kj-czV" secondAttribute="trailing" id="pRi-YN-HrR"/>
+                            <constraint firstItem="AXS-0R-ykl" firstAttribute="top" secondItem="tJf-Kj-czV" secondAttribute="top" id="wYa-BJ-IZW"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="tJf-Kj-czV"/>
+                    </view>
+                    <connections>
+                        <outlet property="pdfView" destination="AXS-0R-ykl" id="IWC-mR-ALE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5vj-vh-40K" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1650" y="-83"/>
         </scene>
         <!--Folder View Controller-->
         <scene sceneID="h20-OD-oKx">
@@ -296,7 +361,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GvU-VR-dkh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760.79999999999995" y="-311.69415292353824"/>
+            <point key="canvasLocation" x="762" y="-486"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="MCw-fG-0iQ">
@@ -306,12 +371,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z3E-or-2ty">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z3E-or-2ty">
                                 <rect key="frame" x="0.0" y="64" width="375" height="265"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="z3E-or-2ty" secondAttribute="trailing" id="28c-Jv-jZ4"/>
+                            <constraint firstItem="z3E-or-2ty" firstAttribute="top" secondItem="bT5-fY-4fb" secondAttribute="top" id="Mah-0M-vIP"/>
+                            <constraint firstItem="z3E-or-2ty" firstAttribute="leading" secondItem="m8h-f7-WtL" secondAttribute="leading" id="hrT-tt-mfa"/>
+                            <constraint firstItem="bT5-fY-4fb" firstAttribute="bottom" secondItem="z3E-or-2ty" secondAttribute="bottom" constant="294" id="iuC-ny-QyV"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="bT5-fY-4fb"/>
                     </view>
                     <connections>
@@ -320,7 +390,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0rz-n2-dn8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1469.5999999999999" y="-312.59370314842579"/>
+            <point key="canvasLocation" x="1650" y="-801"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="er4-pw-wUL">

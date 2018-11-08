@@ -14,6 +14,12 @@ class FolderAndFileCell: UITableViewCell {
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var infoButton: UIButton!
     
+    var pasingInfoForButton: (() -> Void)?
+    
+    @IBAction func infoButtonAction(_ sender: UIButton) {
+        pasingInfoForButton!()
+    }
+
     func cellConfig(name: String, image: UIImage) {
         nameLabel.text = name
         cellImage.image = image

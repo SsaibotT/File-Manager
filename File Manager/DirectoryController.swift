@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PDFKit
 
 class DirectoryController: UITableViewController,
 UIImagePickerControllerDelegate,
@@ -15,8 +16,6 @@ UISearchBarDelegate {
 
     lazy var brains = Brains()
 
-    var indexPathOfButton: IndexPath?
-    var imageURL: URL?
     var mySearchText = ""
 
     override func viewDidLoad() {
@@ -26,7 +25,7 @@ UISearchBarDelegate {
             brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
 
-        brains.sortTheConents(array: brains.filteredContents)
+        brains.sortTheContents(array: brains.filteredContents)
 
         navigationItem.title = brains.path.lastPathComponent
         tableView.reloadData()
@@ -81,31 +80,17 @@ UISearchBarDelegate {
     @objc func imagePickerController(_ picker: UIImagePickerController,
                                      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
-        let image = info[.imageURL] as? URL
+        guard let image = info[.imageURL] as? URL else { return }
 
-        let name = brains.path.appendingPathComponent((image?.lastPathComponent)!)
+        let name = brains.path.appendingPathComponent(image.lastPathComponent)
 
         do {
-            try FileManager.default.copyItem(at: image!, to: name)
+            try FileManager.default.copyItem(at: image, to: name)
         } catch let error as NSError {
             print(error.localizedDescription)
         }
         
-        brains.contents?.insert(name, at: 0)
-        
-        if name.lastPathComponent.contains(mySearchText) || mySearchText == "" {
-            brains.filteredContents.insert(name, at: 0)
-
-            brains.sortTheConents(array: brains.filteredContents)
-
-            let row = brains.filteredContents.index(of: name)
-            let indexPath1 = IndexPath.init(row: row!, section: 0)
-
-            tableView.beginUpdates()
-            tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
-            tableView.endUpdates()
-        }
-        
+        sortAndInsertRowWith(name: Content(url: name))
         picker.dismiss(animated: true, completion: nil)
     }
 
@@ -126,7 +111,7 @@ UISearchBarDelegate {
         let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) {[unowned self] (_) in
             let textField = alert.textFields?.first?.text
 
-            if textField == "" || self.brains.contents!.map({$0.lastPathComponent}).contains(textField) {
+            if textField == "" || self.brains.contents.map({$0.url!.lastPathComponent}).contains(textField) {
                 let failAlert = UIAlertController(title: "Fail",
                                                   message: "Name is invalid",
                                                   preferredStyle: UIAlertController.Style.alert)
@@ -146,19 +131,7 @@ UISearchBarDelegate {
                 if (try? FileManager.default.createDirectory(atPath: path.path,
                                                              withIntermediateDirectories: true,
                                                              attributes: nil)) != nil {
-                    
-                    self.brains.contents?.append(path)
-                    
-                    if path.lastPathComponent.contains(self.mySearchText) || self.mySearchText == "" {
-                        self.brains.filteredContents.append(path)
-                        self.brains.sortTheConents(array: self.brains.filteredContents)
-                        let row = self.brains.filteredContents.index(of: path)
-                        let indexPath1 = IndexPath.init(row: row!, section: 0)
-                        
-                        self.tableView.beginUpdates()
-                        self.tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
-                        self.tableView.endUpdates()
-                    }
+                    self.sortAndInsertRowWith(name: Content(url: path))
                 }
             }
         }
@@ -173,7 +146,23 @@ UISearchBarDelegate {
         } else {
             tableView.setEditing(true, animated: true)
         }
-
+    }
+    
+    func sortAndInsertRowWith(name: Content) {
+        brains.contents.append(name)
+        
+        if name.url!.lastPathComponent.contains(mySearchText) || mySearchText == "" {
+            brains.filteredContents.append(name)
+            
+            brains.sortTheContents(array: brains.filteredContents)
+            
+            let row = brains.filteredContents.index(of: name)
+            let indexPath1 = IndexPath.init(row: row!, section: 0)
+            
+            tableView.beginUpdates()
+            tableView.insertRows(at: [indexPath1], with: UITableView.RowAnimation.right)
+            tableView.endUpdates()
+        }
     }
 
     // MARK: Table view datasource
@@ -190,32 +179,22 @@ UISearchBarDelegate {
         }
         
         cell.pasingInfoForButton = {
-            if self.brains.isDirectoryAt(atIndexPath: indexPath.row) {
+            if self.brains.filteredContents[indexPath.row].getType() == Type.directory {
                 self.performSegue(withIdentifier: "folderSegue", sender: cell)
             } else {
                 self.performSegue(withIdentifier: "fileSegue", sender: cell)
             }
         }
-
-        if brains.isDirectoryAt(atIndexPath: indexPath.row) {
-            cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
-                            image: UIImage(named: "folder")!)
-
-        } else if brains.isImage(atIndexPath: indexPath.row) {
-            cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
-                            image: UIImage(named: "image")!)
-
-        } else {
-            cell.cellConfig(name: brains.filteredContents[indexPath.row].lastPathComponent,
-                            image: UIImage(named: "file")!)
-
-        }
+        
+        cell.cellConfig(name: brains.filteredContents[indexPath.row].url!.lastPathComponent,
+                        image: UIImage(named: brains.filteredContents[indexPath.row].getType().getName())!)
         return cell
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         guard let indexPath = tableView.indexPath(for: (sender as? UITableViewCell)!) else {return}
+        segue.destination.hidesBottomBarWhenPushed = true
         
         switch segue.destination {
         case is FileViewController:
@@ -223,48 +202,58 @@ UISearchBarDelegate {
             
             var attributes: NSDictionary?
             do {
-                attributes = try FileManager.default.attributesOfItem(atPath: fileName.path) as NSDictionary
+                attributes = try FileManager.default.attributesOfItem(atPath: fileName.url!.path) as NSDictionary
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-            
             guard let vcontr = segue.destination as? FileViewController else {return}
-            
-            vcontr.configFileViewControl(name: fileName.lastPathComponent,
+            vcontr.configFileViewControl(name: fileName.url!.lastPathComponent,
                                          size: brains.casting(bytes: Double((attributes?.fileSize())!)),
                                          creationDate: "\((attributes!.fileCreationDate())!)",
-                                         modifiedDate: "\((attributes!.fileModificationDate())!)")
+                modifiedDate: "\((attributes!.fileModificationDate())!)")
             
         case is FolderViewController:
             let folderName = brains.filteredContents[indexPath.row]
-            
             var attributes: NSDictionary?
+            
             do {
-                attributes = try FileManager.default.attributesOfItem(atPath: folderName.path) as NSDictionary
+                attributes = try FileManager.default
+                    .attributesOfItem(atPath: folderName.url!.path) as NSDictionary
+                
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
             
-            let folderSize = brains.casting(bytes: Double(brains.folderSizeAndAmount(folderPath: folderName.path).0))
+            let folderSize = brains.casting(bytes: Double(brains
+                .folderSizeAndAmount(folderPath: folderName.url!.path).0))
             guard let vcontr = segue.destination as? FolderViewController else {return}
             
-            vcontr.configFolderViewControl(name: folderName.lastPathComponent,
+            vcontr.configFolderViewControl(name: folderName.url!.lastPathComponent,
                                            size: folderSize,
-                                           amountOfFiles: "\(brains.folderSizeAndAmount(folderPath: folderName.path).1)",
-                                           creationDate: "\((attributes!.fileCreationDate())!)",
-                                           modifiedDate: "\((attributes!.fileModificationDate())!)")
+                                           amountOfFiles: "\(brains.folderSizeAndAmount(folderPath: folderName.url!.path).1)",
+                creationDate: "\((attributes!.fileCreationDate())!)",
+                modifiedDate: "\((attributes!.fileModificationDate())!)")
         case is ImageViewController:
-            let url = imageURL
             var data: Data!
             
             do {
-                data = try Data(contentsOf: url!)
+                data = try Data(contentsOf: brains.filteredContents[indexPath.row].url!)
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-            guard let vcontr = segue.destination as? ImageViewController else {return}
             
+            guard let vcontr = segue.destination as? ImageViewController else {return}
             vcontr.configImageViewController(image: UIImage(data: data!)!)
+            
+        case is PDFViewController:
+            let document = PDFDocument(url: brains.filteredContents[indexPath.row].url!)
+            guard let vcontr = segue.destination as? PDFViewController else {return}
+            vcontr.configPDFViewController(document: document!)
+        case is TextViewController:
+            
+            let textContent = brains.filteredContents[indexPath.row].typeOfText()
+            guard let vcontr = segue.destination as? TextViewController else {return}
+            vcontr.configTXTViewController(text: textContent)
         default:
             break
         }
@@ -276,43 +265,45 @@ UISearchBarDelegate {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
                             forRowAt indexPath: IndexPath) {
-
-        if editingStyle == UITableViewCell.EditingStyle.delete {
-            let name = brains.filteredContents[indexPath.row]
-
-            if (try? FileManager.default.removeItem(atPath: name.path)) != nil {
-
-                brains.contents!.remove(at: (brains.contents?.map({$0.lastPathComponent})
-                    .index(of: name.lastPathComponent))!)
-                brains.filteredContents.remove(at: indexPath.row)
-
-                tableView.beginUpdates()
-                tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
-                tableView.endUpdates()
-            }
-
+        
+        if editingStyle != UITableViewCell.EditingStyle.delete {return}
+        let name = brains.filteredContents[indexPath.row]
+        
+        if (try? FileManager.default.removeItem(atPath: name.url!.path)) != nil {
+            
+            brains.contents.remove(at: (brains.contents.map({$0.url!.lastPathComponent})
+                .index(of: name.url!.lastPathComponent))!)
+            brains.filteredContents.remove(at: indexPath.row)
+            
+            tableView.beginUpdates()
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.left)
+            tableView.endUpdates()
         }
-
     }
 
     // MARK: table view delegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
-        if brains.isDirectoryAt(atIndexPath: indexPath.row) {
-            let fileName = brains.filteredContents[indexPath.row].lastPathComponent
+        
+        switch brains.filteredContents[indexPath.row].getType() {
+        case .directory:
+            let fileName = brains.filteredContents[indexPath.row].url!.lastPathComponent
             let path = brains.path.appendingPathComponent(fileName)
-
+            
             let viewController: DirectoryController = (storyboard?
                 .instantiateViewController(withIdentifier: "DirectoryController") as? DirectoryController)!
-
+            
             viewController.brains.path = path
             navigationController!.pushViewController(viewController, animated: true)
-
-        } else if brains.isImage(atIndexPath: indexPath.row) {
-            imageURL = brains.filteredContents[indexPath.row]
-            performSegue(withIdentifier: "imageSegue", sender: nil)
+        case .image:
+            performSegue(withIdentifier: "imageSegue", sender: tableView.cellForRow(at: indexPath))
+        case .pdfFile:
+            performSegue(withIdentifier: "pdfSegue", sender: tableView.cellForRow(at: indexPath))
+        case .txtFile:
+            performSegue(withIdentifier: "textSegue", sender: tableView.cellForRow(at: indexPath))
+        default:
+            print("nothing")
         }
     }
     
