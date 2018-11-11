@@ -62,6 +62,18 @@ class Brains: NSObject {
         let castedToString = String(format: "%.2f", castedValue)
         return "\(castedToString) \(unit[index])"
     }
+    
+    func formatingDate(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        if dateFormatter.string(from: date) != dateFormatter.string(from: Date()) {
+            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+            return dateFormatter.string(from: date)
+        }
+        
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.string(from: date)
+    }
 
     func folderSizeAndAmount(folderPath: String) -> (UInt, Int) {
 

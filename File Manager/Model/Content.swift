@@ -8,30 +8,6 @@
 
 import Foundation
 
-enum Type {
-    case directory
-    case pdfFile
-    case txtFile
-    case file
-    case image
-    
-    func getName() -> String {
-        switch self {
-        case .directory:
-            return "folder"
-        case .pdfFile:
-            return "pdf"
-        case .txtFile:
-            return "txt"
-        case .image:
-            return "image"
-        default:
-            return "file"
-        }
-    }
-    
-}
-
 struct Content: Equatable {
     
     var url: URL?

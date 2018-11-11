@@ -25,8 +25,4 @@ class FolderAndFileCell: UITableViewCell {
         cellImage.image = image
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
 }

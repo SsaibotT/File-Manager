@@ -178,7 +178,7 @@ UISearchBarDelegate {
             return UITableViewCell()
         }
         
-        cell.pasingInfoForButton = {
+        cell.pasingInfoForButton = { [unowned self] in
             if self.brains.filteredContents[indexPath.row].getType() == Type.directory {
                 self.performSegue(withIdentifier: "folderSegue", sender: cell)
             } else {
@@ -187,7 +187,7 @@ UISearchBarDelegate {
         }
         
         cell.cellConfig(name: brains.filteredContents[indexPath.row].url!.lastPathComponent,
-                        image: UIImage(named: brains.filteredContents[indexPath.row].getType().getName())!)
+                        image: UIImage(named: brains.filteredContents[indexPath.row].getType().getType)!)
         return cell
     }
 
@@ -197,7 +197,7 @@ UISearchBarDelegate {
         segue.destination.hidesBottomBarWhenPushed = true
         
         switch segue.destination {
-        case is FileViewController:
+        case let vcontr as FileViewController:
             let fileName = brains.filteredContents[indexPath.row]
             
             var attributes: NSDictionary?
@@ -206,13 +206,12 @@ UISearchBarDelegate {
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-            guard let vcontr = segue.destination as? FileViewController else {return}
             vcontr.configFileViewControl(name: fileName.url!.lastPathComponent,
                                          size: brains.casting(bytes: Double((attributes?.fileSize())!)),
-                                         creationDate: "\((attributes!.fileCreationDate())!)",
-                modifiedDate: "\((attributes!.fileModificationDate())!)")
+                                         creationDate: brains.formatingDate(date: (attributes?.fileCreationDate())!),
+                modifiedDate: brains.formatingDate(date: (attributes?.fileModificationDate())!))
             
-        case is FolderViewController:
+        case let vcontr as FolderViewController:
             let folderName = brains.filteredContents[indexPath.row]
             var attributes: NSDictionary?
             
@@ -226,14 +225,12 @@ UISearchBarDelegate {
             
             let folderSize = brains.casting(bytes: Double(brains
                 .folderSizeAndAmount(folderPath: folderName.url!.path).0))
-            guard let vcontr = segue.destination as? FolderViewController else {return}
-            
             vcontr.configFolderViewControl(name: folderName.url!.lastPathComponent,
                                            size: folderSize,
                                            amountOfFiles: "\(brains.folderSizeAndAmount(folderPath: folderName.url!.path).1)",
-                creationDate: "\((attributes!.fileCreationDate())!)",
-                modifiedDate: "\((attributes!.fileModificationDate())!)")
-        case is ImageViewController:
+                creationDate: brains.formatingDate(date: (attributes?.fileCreationDate())!),
+                modifiedDate: brains.formatingDate(date: (attributes?.fileModificationDate())!))
+        case let vcontr as ImageViewController:
             var data: Data!
             
             do {
@@ -242,17 +239,14 @@ UISearchBarDelegate {
                 print(error.localizedDescription)
             }
             
-            guard let vcontr = segue.destination as? ImageViewController else {return}
             vcontr.configImageViewController(image: UIImage(data: data!)!)
             
-        case is PDFViewController:
+        case let vcontr as PDFViewController:
             let document = PDFDocument(url: brains.filteredContents[indexPath.row].url!)
-            guard let vcontr = segue.destination as? PDFViewController else {return}
             vcontr.configPDFViewController(document: document!)
-        case is TextViewController:
+        case let vcontr as TextViewController:
             
             let textContent = brains.filteredContents[indexPath.row].typeOfText()
-            guard let vcontr = segue.destination as? TextViewController else {return}
             vcontr.configTXTViewController(text: textContent)
         default:
             break
