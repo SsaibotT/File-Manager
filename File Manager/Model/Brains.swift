@@ -66,8 +66,8 @@ class Brains: NSObject {
         
         let dateFormatter = DateFormatter()
         
-        let fileDate   = Calendar.current.dateComponents([.day, .month, .year] , from: date)
-        let todaysDate = Calendar.current.dateComponents([.day, .month, .year] , from: Date())
+        let fileDate   = Calendar.current.dateComponents([.day, .month, .year], from: date)
+        let todaysDate = Calendar.current.dateComponents([.day, .month, .year], from: Date())
         if fileDate != todaysDate {
             dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
             return dateFormatter.string(from: date)

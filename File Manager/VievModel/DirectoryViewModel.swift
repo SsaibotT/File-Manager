@@ -25,6 +25,6 @@ class DirectoryViewModel {
         brains.sortTheContents(array: brains.filteredContents)
         path = brains.path
         
-        _ = searchTextObservable.subscribe(onNext: {print($0!)}).disposed(by: disposeBag)
+        searchTextObservable.subscribe(onNext: {print($0!)}).disposed(by: disposeBag)
     }
 }
