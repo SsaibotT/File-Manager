@@ -12,6 +12,7 @@
 		C5376A0E2188ECCE00C10A96 /* PodFile in Resources */ = {isa = PBXBuildFile; fileRef = C5376A0D2188ECCE00C10A96 /* PodFile */; };
 		C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18C218869BA009036EA /* FolderAndFileCell.swift */; };
 		C537C18F21886D75009036EA /* Brains.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18E21886D75009036EA /* Brains.swift */; };
+		C54DB59E2198C13F000F6E0B /* DirectoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54DB59D2198C13F000F6E0B /* DirectoryViewModel.swift */; };
 		C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8621931DFD00BE9476 /* PDFViewController.swift */; };
 		C5631C8921932F8900BE9476 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8821932F8900BE9476 /* TextViewController.swift */; };
 		C5631C8B2193910900BE9476 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8A2193910900BE9476 /* Content.swift */; };
@@ -33,6 +34,7 @@
 		C5376A0D2188ECCE00C10A96 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
 		C537C18C218869BA009036EA /* FolderAndFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAndFileCell.swift; sourceTree = "<group>"; };
 		C537C18E21886D75009036EA /* Brains.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brains.swift; sourceTree = "<group>"; };
+		C54DB59D2198C13F000F6E0B /* DirectoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryViewModel.swift; sourceTree = "<group>"; };
 		C5631C8621931DFD00BE9476 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
 		C5631C8821932F8900BE9476 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		C5631C8A2193910900BE9476 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
@@ -87,57 +89,23 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C54DB595219888AA000F6E0B /* FileViewController */ = {
-			isa = PBXGroup;
-			children = (
-				C5C0A916218338CF004A7F69 /* FileViewController.swift */,
-			);
-			path = FileViewController;
-			sourceTree = "<group>";
-		};
-		C54DB596219888B7000F6E0B /* FolderViewController */ = {
-			isa = PBXGroup;
-			children = (
-				C5F7C79A2184A0EC009368B3 /* FolderViewController.swift */,
-			);
-			path = FolderViewController;
-			sourceTree = "<group>";
-		};
-		C54DB597219888CF000F6E0B /* ImageViewController */ = {
-			isa = PBXGroup;
-			children = (
-				C5F7721A218B08770091EBBB /* ImageViewController.swift */,
-			);
-			path = ImageViewController;
-			sourceTree = "<group>";
-		};
-		C54DB598219888DD000F6E0B /* PDFViewController */ = {
-			isa = PBXGroup;
-			children = (
-				C5631C8621931DFD00BE9476 /* PDFViewController.swift */,
-			);
-			path = PDFViewController;
-			sourceTree = "<group>";
-		};
-		C54DB599219888EB000F6E0B /* TextViewController */ = {
+		C54DB59C2198C0F9000F6E0B /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				C5631C8821932F8900BE9476 /* TextViewController.swift */,
-			);
-			path = TextViewController;
-			sourceTree = "<group>";
-		};
-		C54DB59A21988905000F6E0B /* MainViewController */ = {
-			isa = PBXGroup;
-			children = (
+				C5631C8621931DFD00BE9476 /* PDFViewController.swift */,
+				C5F7721A218B08770091EBBB /* ImageViewController.swift */,
+				C5F7C79A2184A0EC009368B3 /* FolderViewController.swift */,
+				C5C0A916218338CF004A7F69 /* FileViewController.swift */,
 				C5DE22342181D956003376B3 /* DirectoryController.swift */,
 			);
-			path = MainViewController;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		C5631C8C219399FF00BE9476 /* VievModel */ = {
 			isa = PBXGroup;
 			children = (
+				C54DB59D2198C13F000F6E0B /* DirectoryViewModel.swift */,
 			);
 			path = VievModel;
 			sourceTree = "<group>";
@@ -172,12 +140,7 @@
 		C5DE221D2181D741003376B3 /* File Manager */ = {
 			isa = PBXGroup;
 			children = (
-				C54DB599219888EB000F6E0B /* TextViewController */,
-				C54DB598219888DD000F6E0B /* PDFViewController */,
-				C54DB597219888CF000F6E0B /* ImageViewController */,
-				C54DB596219888B7000F6E0B /* FolderViewController */,
-				C54DB595219888AA000F6E0B /* FileViewController */,
-				C54DB59A21988905000F6E0B /* MainViewController */,
+				C54DB59C2198C0F9000F6E0B /* ViewControllers */,
 				C5631C8C219399FF00BE9476 /* VievModel */,
 				C5DE221E2181D741003376B3 /* AppDelegate.swift */,
 				C5DE22252181D748003376B3 /* Assets.xcassets */,
@@ -210,6 +173,7 @@
 				C5DE22182181D741003376B3 /* Frameworks */,
 				C5DE22192181D741003376B3 /* Resources */,
 				C5376A0F2188F04400C10A96 /* SwiftLint */,
+				59578ADBEC4575F1A8B7455D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -290,6 +254,30 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		59578ADBEC4575F1A8B7455D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-File Manager/Pods-File Manager-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-File Manager/Pods-File Manager-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C5376A0F2188F04400C10A96 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -315,6 +303,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C54DB59E2198C13F000F6E0B /* DirectoryViewModel.swift in Sources */,
 				C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */,
 				C5C0A917218338CF004A7F69 /* FileViewController.swift in Sources */,
 				C5F7C79B2184A0EC009368B3 /* FolderViewController.swift in Sources */,

@@ -10,7 +10,6 @@ import UIKit
 
 class Brains: NSObject {
 
-    var directoryVC = DirectoryController()
     var contents = [Content]()
     var filteredContents = [Content]()
     var path: URL! {
@@ -64,9 +63,12 @@ class Brains: NSObject {
     }
     
     func formatingDate(date: Date) -> String {
+        
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        if dateFormatter.string(from: date) != dateFormatter.string(from: Date()) {
+        
+        let fileDate   = Calendar.current.dateComponents([.day, .month, .year] , from: date)
+        let todaysDate = Calendar.current.dateComponents([.day, .month, .year] , from: Date())
+        if fileDate != todaysDate {
             dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
             return dateFormatter.string(from: date)
         }

@@ -8,6 +8,8 @@
 
 import UIKit
 import PDFKit
+import RxSwift
+import RxCocoa
 
 class DirectoryController: UITableViewController,
 UIImagePickerControllerDelegate,
@@ -15,18 +17,23 @@ UINavigationControllerDelegate,
 UISearchBarDelegate {
 
     lazy var brains = Brains()
+//    var directoryViewModel = DirectoryViewModel()
+//    var disposeBag = DisposeBag()
 
     var mySearchText = ""
-
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+//        searchBar.rx.text.asObservable().bind(to: directoryViewModel.searchTextObservable).disposed(by: disposeBag)
         if brains.path == nil {
             brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
 
         brains.sortTheContents(array: brains.filteredContents)
-
+//        directoryViewModel.updatePath()
+        
         navigationItem.title = brains.path.lastPathComponent
         tableView.reloadData()
     }
@@ -169,6 +176,7 @@ UISearchBarDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return brains.filteredContents.count
+        //return directoryViewModel.contents.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -302,7 +310,7 @@ UISearchBarDelegate {
     }
     
     // MARK: Search bar delegate
-    
+        
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
@@ -312,6 +320,7 @@ UISearchBarDelegate {
         searchBar.setShowsCancelButton(false, animated: true)
     }
     
+    //create observable for searchText
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         mySearchText = searchText
         brains.generatedTableFromArray(searchText: searchText)
