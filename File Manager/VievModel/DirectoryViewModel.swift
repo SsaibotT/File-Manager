@@ -22,8 +22,8 @@ class DirectoryViewModel {
         if brains.path == nil {
             brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
-        filteredContents = Variable(brains.filteredContents)
         brains.sortTheContents()
+        filteredContents = Variable(brains.filteredContents)
     }
     
 //    init() {

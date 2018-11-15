@@ -170,67 +170,67 @@ UINavigationControllerDelegate {
         }
     }
 
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        guard let indexPath = tableView.indexPath(for: (sender as? UITableViewCell)!) else {return}
-//        segue.destination.hidesBottomBarWhenPushed = true
-//
-//        switch segue.destination {
-//        case let vcontr as FileViewController:
-//            let fileName = brains.filteredContents[indexPath.row]
-//
-//            var attributes: NSDictionary?
-//            do {
-//                attributes = try FileManager.default.attributesOfItem(atPath: fileName.url!.path) as NSDictionary
-//            } catch let error as NSError {
-//                print(error.localizedDescription)
-//            }
-//            vcontr.configFileViewControl(name: fileName.url!.lastPathComponent,
-//                                         size: brains.casting(bytes: Double((attributes?.fileSize())!)),
-//                                         creationDate: brains.formatingDate(date: (attributes?.fileCreationDate())!),
-//                modifiedDate: brains.formatingDate(date: (attributes?.fileModificationDate())!))
-//
-//        case let vcontr as FolderViewController:
-//            let folderName = brains.filteredContents[indexPath.row]
-//            var attributes: NSDictionary?
-//
-//            do {
-//                attributes = try FileManager.default
-//                    .attributesOfItem(atPath: folderName.url!.path) as NSDictionary
-//
-//            } catch let error as NSError {
-//                print(error.localizedDescription)
-//            }
-//
-//            let folderSize = brains.casting(bytes: Double(brains
-//                .folderSizeAndAmount(folderPath: folderName.url!.path).0))
-//            vcontr.configFolderViewControl(name: folderName.url!.lastPathComponent,
-//                                           size: folderSize,
-//                                           amountOfFiles: "\(brains.folderSizeAndAmount(folderPath: folderName.url!.path).1)",
-//                creationDate: brains.formatingDate(date: (attributes?.fileCreationDate())!),
-//                modifiedDate: brains.formatingDate(date: (attributes?.fileModificationDate())!))
-//        case let vcontr as ImageViewController:
-//            var data: Data!
-//
-//            do {
-//                data = try Data(contentsOf: brains.filteredContents[indexPath.row].url!)
-//            } catch let error as NSError {
-//                print(error.localizedDescription)
-//            }
-//
-//            vcontr.configImageViewController(image: UIImage(data: data!)!)
-//
-//        case let vcontr as PDFViewController:
-//            let document = PDFDocument(url: brains.filteredContents[indexPath.row].url!)
-//            vcontr.configPDFViewController(document: document!)
-//        case let vcontr as TextViewController:
-//
-//            let textContent = brains.filteredContents[indexPath.row].typeOfText()
-//            vcontr.configTXTViewController(text: textContent)
-//        default:
-//            break
-//        }
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        guard let indexPath = tableView.indexPath(for: (sender as? UITableViewCell)!) else {return}
+        segue.destination.hidesBottomBarWhenPushed = true
+
+        switch segue.destination {
+        case let vcontr as FileViewController:
+            let fileName = directoryViewModel.brains.filteredContents[indexPath.row]
+
+            var attributes: NSDictionary?
+            do {
+                attributes = try FileManager.default.attributesOfItem(atPath: fileName.url!.path) as NSDictionary
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+            vcontr.configFileViewControl(name: fileName.url!.lastPathComponent,
+                                         size: directoryViewModel.brains.casting(bytes: Double((attributes?.fileSize())!)),
+                                         creationDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileCreationDate())!),
+                modifiedDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileModificationDate())!))
+
+        case let vcontr as FolderViewController: 
+            let folderName = directoryViewModel.brains.filteredContents[indexPath.row]
+            var attributes: NSDictionary?
+
+            do {
+                attributes = try FileManager.default
+                    .attributesOfItem(atPath: folderName.url!.path) as NSDictionary
+
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+
+            let folderSize = directoryViewModel.brains.casting(bytes: Double(directoryViewModel.brains
+                .folderSizeAndAmount(folderPath: folderName.url!.path).0))
+            vcontr.configFolderViewControl(name: folderName.url!.lastPathComponent,
+                                           size: folderSize,
+                                           amountOfFiles: "\(directoryViewModel.brains.folderSizeAndAmount(folderPath: folderName.url!.path).1)",
+                creationDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileCreationDate())!),
+                modifiedDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileModificationDate())!))
+        case let vcontr as ImageViewController:
+            var data: Data!
+
+            do {
+                data = try Data(contentsOf: directoryViewModel.filteredContents.value[indexPath.row].url!)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+
+            vcontr.configImageViewController(image: UIImage(data: data!)!)
+
+        case let vcontr as PDFViewController:
+            let document = PDFDocument(url: directoryViewModel.filteredContents.value[indexPath.row].url!)
+            vcontr.configPDFViewController(document: document!)
+        case let vcontr as TextViewController:
+
+            let textContent = directoryViewModel.filteredContents.value[indexPath.row].typeOfText()
+            vcontr.configTXTViewController(text: textContent)
+        default:
+            break
+        }
+    }
 //
 //    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 //        return true
