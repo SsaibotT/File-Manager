@@ -25,9 +25,6 @@
                                 <string>Title</string>
                                 <string>Title</string>
                             </scopeButtonTitles>
-                            <connections>
-                                <outlet property="delegate" destination="NOQ-nS-XZc" id="pSb-KI-Le4"/>
-                            </connections>
                         </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="MBv-ES-xSJ" customClass="FolderAndFileCell" customModule="File_Manager" customModuleProvider="target">
@@ -64,10 +61,6 @@
                                 </connections>
                             </tableViewCell>
                         </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="NOQ-nS-XZc" id="omP-bR-1h0"/>
-                            <outlet property="delegate" destination="NOQ-nS-XZc" id="WOE-58-Ujy"/>
-                        </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="8qN-xr-zlt"/>
                     <connections>
