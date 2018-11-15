@@ -15,7 +15,7 @@ class DirectoryController: UITableViewController,
 UIImagePickerControllerDelegate,
 UINavigationControllerDelegate {
 
-    var directoryViewModel = DirectoryViewModel()
+    lazy var directoryViewModel = DirectoryViewModel()
     let disposeBag = DisposeBag()
 
     var mySearchText = ""
@@ -27,6 +27,7 @@ UINavigationControllerDelegate {
         tableView.delegate = nil
         tableView.dataSource = nil
 
+        directoryViewModel.loaded()
         searchBar.rx.text.asObservable().bind(to: directoryViewModel.searchTextObservable).disposed(by: disposeBag)
         setupBindings()
     }
@@ -40,7 +41,8 @@ UINavigationControllerDelegate {
     private func setupBindings() {
         directoryViewModel.filteredContents
             .asObservable()
-            .bind(to: tableView.rx.items(cellIdentifier: "Cell", cellType: FolderAndFileCell.self)) {(_, content, cell) in
+            .bind(to: tableView.rx
+                .items(cellIdentifier: "Cell", cellType: FolderAndFileCell.self)) {(_, content, cell) in
                 cell.pasingInfoForButton = { [unowned self] in
                     if content.getType() == Type.directory {
                         self.performSegue(withIdentifier: "folderSegue", sender: cell)
@@ -55,18 +57,36 @@ UINavigationControllerDelegate {
             .disposed(by: disposeBag)
         
         tableView.rx.itemDeleted
-            .subscribe {
+            .subscribe { [unowned self] in
                 self.directoryViewModel.delete(index: $0.element!.row)
             }
             .disposed(by: disposeBag)
         
         tableView.rx.itemSelected
-            .subscribe {
-
-                print($0)
+            .subscribe { [unowned self] in
+                switch self.directoryViewModel.filteredContents.value[$0.element!.row].getType() {
+                case .directory:
+                    let fileName = self.directoryViewModel
+                        .filteredContents.value[$0.element!.row].url!.lastPathComponent
+                    let path = self.directoryViewModel.brains.path.appendingPathComponent(fileName)
+                    
+                    let viewController: DirectoryController = (self.storyboard?
+                        .instantiateViewController(withIdentifier: "DirectoryController") as? DirectoryController)!
+            
+                    viewController.directoryViewModel.brains.path = path
+                    self.navigationController!.pushViewController(viewController, animated: true)
+                case .image:
+                    self.performSegue(withIdentifier: "imageSegue", sender: self.tableView.cellForRow(at: $0.element!))
+                case .pdfFile:
+                    self.performSegue(withIdentifier: "pdfSegue", sender: self.tableView.cellForRow(at: $0.element!))
+                case .txtFile:
+                    self.performSegue(withIdentifier: "textSegue", sender: self.tableView.cellForRow(at: $0.element!))
+                default:
+                    print("nothing")
+                }
             }
-            .dispose()
-
+            .disposed(by: disposeBag)
+        
     }
 
     private func navigationButtons () {
@@ -269,4 +289,3 @@ UINavigationControllerDelegate {
 //        tableView.reloadData()
 //    }
 }
-

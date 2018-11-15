@@ -11,24 +11,26 @@ import RxSwift
 
 class DirectoryViewModel {
     
-    var brains = Brains()
-    //var contents = [Content]()
+    lazy var brains = Brains()
     var filteredContents: Variable<[Content]> = Variable([Content]())
     var path: URL!
+    
     var searchTextObservable: BehaviorSubject<String?> = BehaviorSubject(value: "")
     var disposeBag = DisposeBag()
     
-    init() {
+    func loaded() {
         if brains.path == nil {
             brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
         filteredContents = Variable(brains.filteredContents)
-        
         brains.sortTheContents()
-        searchTextObservable.subscribe(onNext: {
-            print($0!)
-        }).disposed(by: disposeBag)
     }
+    
+//    init() {
+//        searchTextObservable.subscribe(onNext: {
+//            print($0!)
+//        }).disposed(by: disposeBag)
+//    }
     
     func delete(index: Int) {
         let name = filteredContents.value[index]

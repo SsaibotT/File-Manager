@@ -31,7 +31,6 @@ class Brains: NSObject {
         }
     }
 
-    //func sortTheContents(array: [Content]) {
     func sortTheContents() {
 
         var arrayOfDirectories = [Content]()
