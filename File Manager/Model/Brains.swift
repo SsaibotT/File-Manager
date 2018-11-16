@@ -32,7 +32,7 @@ class Brains: NSObject {
     }
 
     func sortTheContents() {
-
+        print("first filtered count \(filteredContents.count)")
         var arrayOfDirectories = [Content]()
         var arrayOfFiles = [Content]()
 
@@ -45,6 +45,8 @@ class Brains: NSObject {
         let sortedDictionaryArray = arrayOfDirectories.sorted {$0.url!.lastPathComponent < $1.url!.lastPathComponent}
         let sortedFilesArray = arrayOfFiles.sorted {$0.url!.lastPathComponent < $1.url!.lastPathComponent}
         filteredContents = sortedDictionaryArray + sortedFilesArray
+        print("first filtered count \(filteredContents.count)")
+        print("original content count \(contents.count)")
     }
 
     func casting(bytes: Double) -> String {

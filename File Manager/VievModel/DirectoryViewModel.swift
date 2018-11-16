@@ -35,7 +35,9 @@ class DirectoryViewModel {
     func delete(index: Int) {
         let name = filteredContents.value[index]
         if (try? FileManager.default.removeItem(atPath: name.url!.path)) != nil {
-            filteredContents.value.remove(at: index)
+            brains.contents.remove(at: index)
+            update()
+            print("last \(filteredContents.value.count)")
         }
     }
     
@@ -59,7 +61,9 @@ class DirectoryViewModel {
         if (try? FileManager.default.createDirectory(atPath: path.path,
                                                      withIntermediateDirectories: true,
                                                      attributes: nil)) != nil {
-            filteredContents.value.append(Content(url: path))
+            brains.contents.append(Content(url: path))
+            brains.sortTheContents()
+            update()
         }
     }
     
@@ -73,6 +77,13 @@ class DirectoryViewModel {
             print(error.localizedDescription)
         }
         
-        filteredContents.value.append(Content(url: name))
+        brains.contents.append(Content(url: path))
+        update()
+    }
+    
+    func update() {
+        brains.sortTheContents()
+        filteredContents.value = brains.filteredContents
+        print("viewModel = \(filteredContents.value.count)")
     }
 }
