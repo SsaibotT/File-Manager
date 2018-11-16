@@ -5,6 +5,9 @@
 //  Created by Serhii on 10/25/18.
 //  Copyright © 2018 Serhii. All rights reserved.
 //
+//Запитатись за анімації при видаленні чи созданні
+//Запитатись чи Variables правильно використовувати
+//Запитатись шо робити з методом prepareFor
 
 import UIKit
 import PDFKit
