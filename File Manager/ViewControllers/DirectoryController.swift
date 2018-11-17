@@ -5,9 +5,6 @@
 //  Created by Serhii on 10/25/18.
 //  Copyright © 2018 Serhii. All rights reserved.
 //
-//Запитатись за анімації при видаленні чи созданні
-//Запитатись чи Variables правильно використовувати
-//Запитатись шо робити з методом prepareFor
 
 import UIKit
 import PDFKit
@@ -90,6 +87,20 @@ UINavigationControllerDelegate {
             }
             .disposed(by: disposeBag)
         
+        searchBar.rx.textDidBeginEditing
+            .subscribe { [unowned self] in
+                print("im begining diting")
+                self.searchBar.setShowsCancelButton(true, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        searchBar.rx.cancelButtonClicked
+            .subscribe { [unowned self] in
+                print("im clicking cancel button")
+                self.searchBar.resignFirstResponder()
+                self.searchBar.setShowsCancelButton(false, animated: true)
+            }
+            .disposed(by: disposeBag)
     }
 
     private func navigationButtons () {

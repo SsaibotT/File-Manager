@@ -22,15 +22,16 @@ class DirectoryViewModel {
         if brains.path == nil {
             brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
-        brains.sortTheContents()
-        filteredContents = Variable(brains.filteredContents)
+//        brains.sortTheContents()
+//        filteredContents.value = brains.filteredContents
+        update()
     }
     
-//    init() {
-//        searchTextObservable.subscribe(onNext: {
-//            print($0!)
-//        }).disposed(by: disposeBag)
-//    }
+    init() {
+        searchTextObservable.subscribe(onNext: {
+            print($0!)
+        }).disposed(by: disposeBag)
+    }
     
     func delete(index: Int) {
         let name = filteredContents.value[index]
@@ -63,22 +64,23 @@ class DirectoryViewModel {
                                                      withIntermediateDirectories: true,
                                                      attributes: nil)) != nil {
             brains.contents.append(Content(url: path))
-            brains.sortTheContents()
+            //brains.sortTheContents()
             update()
         }
     }
     
     func addImage(nameUrl: URL) {
         
-        let name = brains.path.appendingPathComponent(nameUrl.lastPathComponent)
+        let path = brains.path.appendingPathComponent(nameUrl.lastPathComponent)
         
         do {
-            try FileManager.default.copyItem(at: nameUrl, to: name)
+            try FileManager.default.copyItem(at: nameUrl, to: path)
         } catch let error as NSError {
             print(error.localizedDescription)
         }
         
-        brains.filteredContents.append(Content(url: path))
+        print(path)
+        brains.contents.append(Content(url: path))
         update()
     }
     
