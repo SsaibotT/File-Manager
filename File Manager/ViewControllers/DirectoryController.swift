@@ -28,7 +28,7 @@ UINavigationControllerDelegate {
         tableView.dataSource = nil
 
         directoryViewModel.loaded()
-        searchBar.rx.text.asObservable().bind(to: directoryViewModel.searchTextObservable).disposed(by: disposeBag)
+        
         setupBindings()
     }
 
@@ -93,6 +93,15 @@ UINavigationControllerDelegate {
                 self.searchBar.setShowsCancelButton(true, animated: true)
             }
             .disposed(by: disposeBag)
+        
+        searchBar.rx.text
+            .orEmpty
+            .subscribe(onNext: { [unowned self] in
+                self.directoryViewModel.brains.generatedTableFromArray(searchText: $0)
+                self.directoryViewModel.update()
+                self.directoryViewModel.searchText = $0
+                
+            }).disposed(by: disposeBag)
         
         searchBar.rx.cancelButtonClicked
             .subscribe { [unowned self] in
@@ -168,8 +177,22 @@ UINavigationControllerDelegate {
 
         let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) {[unowned self] (_) in
             let textField = alert.textFields?.first?.text
-            self.directoryViewModel.add(name: textField!)
-
+            
+            if textField == "" || self.directoryViewModel.filteredContents.value.map({$0.url!.lastPathComponent}).contains(textField) {
+                let failAlert = UIAlertController(title: "Fail",
+                                                  message: "Name is invalid",
+                                                  preferredStyle: UIAlertController.Style.alert)
+                let failAction = UIAlertAction(title: "Ok",
+                                               style: UIAlertAction.Style.default,
+                                               handler: {[unowned self] (_) in
+                                                self.addAction()
+                })
+                
+                failAlert.addAction(failAction)
+                self.present(failAlert, animated: true, completion: nil)
+            } else {
+                self.directoryViewModel.add(name: textField!)
+            }
         }
         alert.addAction(defaultAction)
         present(alert, animated: true, completion: nil)
@@ -245,61 +268,4 @@ UINavigationControllerDelegate {
             break
         }
     }
-//
-//    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
-//
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
-//                            forRowAt indexPath: IndexPath) {
-//
-//        if editingStyle != UITableViewCell.EditingStyle.delete {return}
-//
-//        directoryViewModel.remove(index: indexPath.row)
-//
-//    }
-//
-//    // MARK: table view delegate
-//
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//
-//        switch brains.filteredContents[indexPath.row].getType() {
-//        case .directory:
-//            let fileName = brains.filteredContents[indexPath.row].url!.lastPathComponent
-//            let path = brains.path.appendingPathComponent(fileName)
-//
-//            let viewController: DirectoryController = (storyboard?
-//                .instantiateViewController(withIdentifier: "DirectoryController") as? DirectoryController)!
-//
-//            viewController.brains.path = path
-//            navigationController!.pushViewController(viewController, animated: true)
-//        case .image:
-//            performSegue(withIdentifier: "imageSegue", sender: tableView.cellForRow(at: indexPath))
-//        case .pdfFile:
-//            performSegue(withIdentifier: "pdfSegue", sender: tableView.cellForRow(at: indexPath))
-//        case .txtFile:
-//            performSegue(withIdentifier: "textSegue", sender: tableView.cellForRow(at: indexPath))
-//        default:
-//            print("nothing")
-//        }
-//    }
-//
-//    // MARK: Search bar delegate
-//
-//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        searchBar.setShowsCancelButton(true, animated: true)
-//    }
-//
-//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        searchBar.resignFirstResponder()
-//        searchBar.setShowsCancelButton(false, animated: true)
-//    }
-//
-//    //create observable for searchText
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        mySearchText = searchText
-//        brains.generatedTableFromArray(searchText: searchText)
-//        tableView.reloadData()
-//    }
 }

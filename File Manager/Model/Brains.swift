@@ -31,11 +31,12 @@ class Brains: NSObject {
         }
     }
 
-    func sortTheContents() {
+    func sortTheContents(array: [Content]) {
+        
         var arrayOfDirectories = [Content]()
         var arrayOfFiles = [Content]()
 
-        for content in contents {
+        for content in array {
             content.getType() == Type.directory ?
                 arrayOfDirectories.append(content) :
                 arrayOfFiles.append(content)
@@ -114,7 +115,6 @@ class Brains: NSObject {
                 return false
             }
         }
-        
-        sortTheContents()
+        sortTheContents(array: filteredContents)
     }
 }
