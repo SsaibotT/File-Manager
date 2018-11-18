@@ -15,7 +15,7 @@ class DirectoryController: UITableViewController,
 UIImagePickerControllerDelegate,
 UINavigationControllerDelegate {
 
-    lazy var directoryViewModel = DirectoryViewModel()
+    var directoryViewModel: DirectoryViewModel = DirectoryViewModel()
     let helper = Helper()
     let disposeBag = DisposeBag()
 
@@ -29,6 +29,7 @@ UINavigationControllerDelegate {
         tableView.dataSource = nil
 
         directoryViewModel.loaded()
+        //directoryViewModel = DirectoryViewModel()
         
         setupBindings()
     }
@@ -53,7 +54,7 @@ UINavigationControllerDelegate {
                 }
                 
                 cell.cellConfig(name: content.url!.lastPathComponent,
-                                image: UIImage(named: content.getType().getType)!)
+                                image: UIImage(named: content.getType().rawValue)!)
             }
             .disposed(by: disposeBag)
         
@@ -69,12 +70,12 @@ UINavigationControllerDelegate {
                 case .directory:
                     let fileName = self.directoryViewModel
                         .filteredContents.value[$0.element!.row].url!.lastPathComponent
-                    let path = self.directoryViewModel.brains.path.appendingPathComponent(fileName)
+                    let path = self.directoryViewModel.path.appendingPathComponent(fileName)
                     
                     let viewController: DirectoryController = (self.storyboard?
                         .instantiateViewController(withIdentifier: "DirectoryController") as? DirectoryController)!
             
-                    viewController.directoryViewModel.brains.path = path
+                    viewController.directoryViewModel.path = path
                     self.navigationController!.pushViewController(viewController, animated: true)
                 case .image:
                     self.performSegue(withIdentifier: "imageSegue", sender: self.tableView.cellForRow(at: $0.element!))
@@ -98,8 +99,8 @@ UINavigationControllerDelegate {
         searchBar.rx.text
             .orEmpty
             .subscribe(onNext: { [unowned self] in
-                self.directoryViewModel.brains.generatedTableFromArray(searchText: $0)
-                self.directoryViewModel.update()
+                self.directoryViewModel.generatedTableFromArray(searchText: $0)
+                self.directoryViewModel.sortTheContents(array: self.directoryViewModel.filteredContents.value)
                 self.directoryViewModel.searchText = $0
                 
             }).disposed(by: disposeBag)
@@ -215,7 +216,7 @@ UINavigationControllerDelegate {
 
         switch segue.destination {
         case let vcontr as FileViewController:
-            let fileName = directoryViewModel.brains.filteredContents[indexPath.row]
+            let fileName = directoryViewModel.filteredContents.value[indexPath.row]
 
             var attributes: NSDictionary?
             do {
@@ -229,7 +230,7 @@ UINavigationControllerDelegate {
                 modifiedDate: helper.formatingDate(date: (attributes?.fileModificationDate())!))
 
         case let vcontr as FolderViewController: 
-            let folderName = directoryViewModel.brains.filteredContents[indexPath.row]
+            let folderName = directoryViewModel.filteredContents.value[indexPath.row]
             var attributes: NSDictionary?
 
             do {

@@ -11,50 +11,74 @@ import RxSwift
 
 class DirectoryViewModel {
     
-    lazy var brains = Brains()
+    var contents = [Content]()
     var filteredContents: Variable<[Content]> = Variable([Content]())
-    var path: URL!
-    
     var searchText: String = ""
     var disposeBag = DisposeBag()
+    var path: URL! {
+        didSet {
+            do {
+                let urls = try FileManager.default.contentsOfDirectory(at: path,
+                                                                       includingPropertiesForKeys: nil,
+                                                                       options: FileManager
+                                                                        .DirectoryEnumerationOptions
+                                                                        .skipsHiddenFiles)
+                for url in urls {
+                    contents.append(Content(url: url))
+                }
+                
+                filteredContents.value = contents
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+//    init() {
+//        if path == nil {
+//            path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
+//        }
+//
+//        sortTheContents(array: filteredContents.value)
+//    }
     
     func loaded() {
-        if brains.path == nil {
-            brains.path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
+        if path == nil {
+            path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
         
-        update()
+        sortTheContents(array: filteredContents.value)
     }
     
     func delete(index: Int) {
         let name = filteredContents.value[index]
         if (try? FileManager.default.removeItem(atPath: name.url!.path)) != nil {
-            brains.contents.remove(at: (brains.contents.map({$0.url!.lastPathComponent})
+            contents.remove(at: (contents.map({$0.url!.lastPathComponent})
                 .index(of: name.url!.lastPathComponent))!)
-            brains.filteredContents.remove(at: index)
-            update()
+            filteredContents.value.remove(at: index)
+            sortTheContents(array: filteredContents.value)
         }
     }
     
     func add(name: String) {
-        let path = brains.path.appendingPathComponent(name)
+        let path = self.path.appendingPathComponent(name)
         
         if (try? FileManager.default.createDirectory(atPath: path.path,
                                                      withIntermediateDirectories: true,
                                                      attributes: nil)) != nil {
             
-            brains.contents.append(Content(url: path))
+            contents.append(Content(url: path))
             
             if searchText == "" || searchText == name {
-                brains.filteredContents.append(Content(url: path))
+                filteredContents.value.append(Content(url: path))
             }
-            update()
+            sortTheContents(array: filteredContents.value)
         }
     }
     
     func addImage(nameUrl: URL) {
         
-        let path = brains.path.appendingPathComponent(nameUrl.lastPathComponent)
+        let path = self.path.appendingPathComponent(nameUrl.lastPathComponent)
         
         do {
             try FileManager.default.copyItem(at: nameUrl, to: path)
@@ -62,12 +86,38 @@ class DirectoryViewModel {
             print(error.localizedDescription)
         }
         
-        brains.filteredContents.append(Content(url: path))
-        update()
+        filteredContents.value.append(Content(url: path))
+        contents.append(Content(url: path))
+        sortTheContents(array: filteredContents.value)
     }
     
-    func update() {
-        brains.sortTheContents(array: brains.filteredContents)
-        filteredContents.value = brains.filteredContents
+    func sortTheContents(array: [Content]) {
+        
+        var arrayOfDirectories = [Content]()
+        var arrayOfFiles = [Content]()
+        
+        for content in array {
+            content.getType() == Type.directory ?
+                arrayOfDirectories.append(content) :
+                arrayOfFiles.append(content)
+        }
+        
+        let sortedDictionaryArray = arrayOfDirectories.sorted {$0.url!.lastPathComponent < $1.url!.lastPathComponent}
+        let sortedFilesArray = arrayOfFiles.sorted {$0.url!.lastPathComponent < $1.url!.lastPathComponent}
+        filteredContents.value = sortedDictionaryArray + sortedFilesArray
+    }
+    
+    func generatedTableFromArray(searchText: String) {
+        
+        filteredContents.value = contents.filter {(title: Content) -> Bool in
+            if title.url!.lastPathComponent.lowercased().contains(searchText.lowercased()) {
+                return true
+            } else if searchText == "" {
+                return true
+            } else {
+                return false
+            }
+        }
+        sortTheContents(array: filteredContents.value)
     }
 }

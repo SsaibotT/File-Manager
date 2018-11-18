@@ -8,25 +8,10 @@
 
 import Foundation
 
-enum Type {
-    case directory
-    case pdfFile
-    case txtFile
-    case file
-    case image
-    
-    var getType: String {
-        switch self {
-        case .directory:
-            return "folder"
-        case .pdfFile:
-            return "pdf"
-        case .txtFile:
-            return "txt"
-        case .image:
-            return "image"
-        default:
-            return "file"
-        }
-    }
+enum Type: String {
+    case directory = "folder"
+    case pdfFile   = "pdf"
+    case txtFile   = "txt"
+    case file      = "image"
+    case image     = "file"
 }
