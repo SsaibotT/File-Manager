@@ -16,6 +16,7 @@ UIImagePickerControllerDelegate,
 UINavigationControllerDelegate {
 
     lazy var directoryViewModel = DirectoryViewModel()
+    let helper = Helper()
     let disposeBag = DisposeBag()
 
     var mySearchText = ""
@@ -88,10 +89,10 @@ UINavigationControllerDelegate {
             .disposed(by: disposeBag)
         
         searchBar.rx.textDidBeginEditing
-            .subscribe { [unowned self] in
-                print("im begining diting")
+            .asObservable()
+            .subscribe(onNext: { [unowned self] in
                 self.searchBar.setShowsCancelButton(true, animated: true)
-            }
+            })
             .disposed(by: disposeBag)
         
         searchBar.rx.text
@@ -104,11 +105,11 @@ UINavigationControllerDelegate {
             }).disposed(by: disposeBag)
         
         searchBar.rx.cancelButtonClicked
-            .subscribe { [unowned self] in
-                print("im clicking cancel button")
+            .asObservable()
+            .subscribe(onNext: { [unowned self] in
                 self.searchBar.resignFirstResponder()
                 self.searchBar.setShowsCancelButton(false, animated: true)
-            }
+            })
             .disposed(by: disposeBag)
     }
 
@@ -223,9 +224,9 @@ UINavigationControllerDelegate {
                 print(error.localizedDescription)
             }
             vcontr.configFileViewControl(name: fileName.url!.lastPathComponent,
-                                         size: directoryViewModel.brains.casting(bytes: Double((attributes?.fileSize())!)),
-                                         creationDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileCreationDate())!),
-                modifiedDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileModificationDate())!))
+                                         size: helper.casting(bytes: Double((attributes?.fileSize())!)),
+                                         creationDate: helper.formatingDate(date: (attributes?.fileCreationDate())!),
+                modifiedDate: helper.formatingDate(date: (attributes?.fileModificationDate())!))
 
         case let vcontr as FolderViewController: 
             let folderName = directoryViewModel.brains.filteredContents[indexPath.row]
@@ -239,13 +240,13 @@ UINavigationControllerDelegate {
                 print(error.localizedDescription)
             }
 
-            let folderSize = directoryViewModel.brains.casting(bytes: Double(directoryViewModel.brains
+            let folderSize = helper.casting(bytes: Double(helper
                 .folderSizeAndAmount(folderPath: folderName.url!.path).0))
             vcontr.configFolderViewControl(name: folderName.url!.lastPathComponent,
                                            size: folderSize,
-                                           amountOfFiles: "\(directoryViewModel.brains.folderSizeAndAmount(folderPath: folderName.url!.path).1)",
-                creationDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileCreationDate())!),
-                modifiedDate: directoryViewModel.brains.formatingDate(date: (attributes?.fileModificationDate())!))
+                                           amountOfFiles: "\(helper.folderSizeAndAmount(folderPath: folderName.url!.path).1)",
+                creationDate: helper.formatingDate(date: (attributes?.fileCreationDate())!),
+                modifiedDate: helper.formatingDate(date: (attributes?.fileModificationDate())!))
         case let vcontr as ImageViewController:
             var data: Data!
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		33033058EC8C641B1A63F3F5 /* Pods_File_Manager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FE9F36F34995BE96741298 /* Pods_File_Manager.framework */; };
+		C5274BB421A17C3A00144BD6 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5274BB321A17C3A00144BD6 /* Helper.swift */; };
 		C53389602194BAA10028F84A /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = C533895F2194BAA10028F84A /* Type.swift */; };
 		C5376A0E2188ECCE00C10A96 /* PodFile in Resources */ = {isa = PBXBuildFile; fileRef = C5376A0D2188ECCE00C10A96 /* PodFile */; };
 		C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18C218869BA009036EA /* FolderAndFileCell.swift */; };
@@ -30,6 +31,7 @@
 		4628B7DEBA83BBD0FDBB3A00 /* Pods-File Manager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-File Manager.release.xcconfig"; path = "Pods/Target Support Files/Pods-File Manager/Pods-File Manager.release.xcconfig"; sourceTree = "<group>"; };
 		75FE9F36F34995BE96741298 /* Pods_File_Manager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_File_Manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B95AAC849C26D0C90452099C /* Pods-File Manager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-File Manager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-File Manager/Pods-File Manager.debug.xcconfig"; sourceTree = "<group>"; };
+		C5274BB321A17C3A00144BD6 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		C533895F2194BAA10028F84A /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		C5376A0D2188ECCE00C10A96 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
 		C537C18C218869BA009036EA /* FolderAndFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAndFileCell.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				C537C18E21886D75009036EA /* Brains.swift */,
 				C5631C8A2193910900BE9476 /* Content.swift */,
 				C533895F2194BAA10028F84A /* Type.swift */,
+				C5274BB321A17C3A00144BD6 /* Helper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				C5631C8921932F8900BE9476 /* TextViewController.swift in Sources */,
 				C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */,
 				C537C18F21886D75009036EA /* Brains.swift in Sources */,
+				C5274BB421A17C3A00144BD6 /* Helper.swift in Sources */,
 				C5F7721B218B08770091EBBB /* ImageViewController.swift in Sources */,
 				C5DE221F2181D741003376B3 /* AppDelegate.swift in Sources */,
 			);
