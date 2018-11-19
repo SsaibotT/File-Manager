@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import PDFKit
 
 class DirectoryViewModel {
     
@@ -15,6 +16,7 @@ class DirectoryViewModel {
     var filteredContents: Variable<[Content]> = Variable([Content]())
     var searchText: String = ""
     var disposeBag = DisposeBag()
+    var helper = Helper()
     var path: URL! {
         didSet {
             do {
@@ -119,5 +121,98 @@ class DirectoryViewModel {
             }
         }
         sortTheContents(array: filteredContents.value)
+    }
+    
+    func goToFolderInfo(cell: UITableViewCell,
+                        indexPath: IndexPath,
+                        viewController: UIViewController) {
+        
+        let folderName = filteredContents.value[indexPath.row]
+        var attributes: NSDictionary?
+        do {
+            attributes = try FileManager.default
+                .attributesOfItem(atPath: folderName.url!.path) as NSDictionary
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        let folderSize = helper.casting(bytes: Double(helper
+            .folderSizeAndAmount(folderPath: folderName.url!.path).0))
+        let folderAmoundOfFiles = "\(helper.folderSizeAndAmount(folderPath: folderName.url!.path).1)"
+        let creationDate = helper.formatingDate(date: (attributes?.fileCreationDate())!)
+        let modifiedDate = helper.formatingDate(date: (attributes?.fileModificationDate())!)
+        
+        ShowControllers.showDetailFolderViewController(from: viewController,
+                                                       name: folderName.url!.lastPathComponent,
+                                                       size: folderSize,
+                                                       amountOfFiles: folderAmoundOfFiles,
+                                                       creationDate: creationDate,
+                                                       modifiedDate: modifiedDate)
+    }
+    
+    func goToFileInfo(cell: UITableViewCell,
+                      indexPath: IndexPath,
+                      viewController: UIViewController) {
+        
+        let fileName = filteredContents.value[indexPath.row]
+        var attributes: NSDictionary?
+        do {
+            attributes = try FileManager.default.attributesOfItem(atPath: fileName.url!.path) as NSDictionary
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        let fileSize     = helper.casting(bytes: Double((attributes?.fileSize())!))
+        let creationDate = helper.formatingDate(date: (attributes?.fileCreationDate())!)
+        let modifiedDate = helper.formatingDate(date: (attributes?.fileModificationDate())!)
+        
+        ShowControllers.showDetailFileViewController(from: viewController,
+                                                     name: fileName.url!.lastPathComponent,
+                                                     size: fileSize,
+                                                     creationDate: creationDate,
+                                                     modifiedDate: modifiedDate)
+    }
+    
+    func goToImageViewController(cell: UITableViewCell,
+                                 indexPath: IndexPath,
+                                 viewController: UIViewController) {
+        var data: Data!
+        
+        do {
+            data = try Data(contentsOf: filteredContents.value[indexPath.row].url!)
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        ShowControllers.showImageViewController(from: viewController,
+                                                image: UIImage(data: data!)!)
+        
+    }
+    
+    func goToPDFViewController(cell: UITableViewCell,
+                               indexPath: IndexPath,
+                               viewController: UIViewController) {
+        let document = PDFDocument(url: filteredContents.value[indexPath.row].url!)
+        ShowControllers.showPDFViewController(from: viewController,
+                                              document: document!)
+    }
+    
+    func goToDirectoryViewController(cell: UITableViewCell,
+                                     indexPath: IndexPath,
+                                     viewController: UIViewController) {
+        
+        let fileName = filteredContents.value[indexPath.row].url!.lastPathComponent
+        let path = self.path.appendingPathComponent(fileName)
+        ShowControllers.showDirectoryViewController(from: viewController, path: path)
+    }
+    
+    func goToTextViewController(cell: UITableViewCell,
+                                indexPath: IndexPath,
+                                viewController: UIViewController) {
+        
+        let textContent = filteredContents.value[indexPath.row].typeOfText()
+        ShowControllers.showTextViewController(from: viewController,
+                                               text: textContent)
     }
 }

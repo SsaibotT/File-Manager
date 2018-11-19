@@ -16,10 +16,8 @@ UIImagePickerControllerDelegate,
 UINavigationControllerDelegate {
 
     var directoryViewModel: DirectoryViewModel = DirectoryViewModel()
-    let helper = Helper()
     let disposeBag = DisposeBag()
 
-    var mySearchText = ""
     @IBOutlet weak var searchBar: UISearchBar!
     
     override func viewDidLoad() {
@@ -41,95 +39,6 @@ UINavigationControllerDelegate {
         navigationButtons()
     }
     
-    func goToFolderInfo(cell: UITableViewCell) {
-        
-        guard let indexPath = tableView.indexPath(for: (cell)) else {return}
-        
-        let folderName = directoryViewModel.filteredContents.value[indexPath.row]
-        var attributes: NSDictionary?
-        do {
-            attributes = try FileManager.default
-                .attributesOfItem(atPath: folderName.url!.path) as NSDictionary
-            
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
-        let folderSize = helper.casting(bytes: Double(helper
-            .folderSizeAndAmount(folderPath: folderName.url!.path).0))
-        let folderAmoundOfFiles = "\(helper.folderSizeAndAmount(folderPath: folderName.url!.path).1)"
-        let creationDate = helper.formatingDate(date: (attributes?.fileCreationDate())!)
-        let modifiedDate = helper.formatingDate(date: (attributes?.fileModificationDate())!)
-        
-        ShowControllers.showDetailFolderViewController(from: self,
-                                                       name: folderName.url!.lastPathComponent,
-                                                       size: folderSize,
-                                                       amountOfFiles: folderAmoundOfFiles,
-                                                       creationDate: creationDate,
-                                                       modifiedDate: modifiedDate)
-    }
-    
-    func goToFileInfo(cell: UITableViewCell) {
-        
-        guard let indexPath = tableView.indexPath(for: (cell)) else {return}
-
-        let fileName = directoryViewModel.filteredContents.value[indexPath.row]
-        var attributes: NSDictionary?
-        do {
-            attributes = try FileManager.default.attributesOfItem(atPath: fileName.url!.path) as NSDictionary
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
-        let fileSize     = helper.casting(bytes: Double((attributes?.fileSize())!))
-        let creationDate = helper.formatingDate(date: (attributes?.fileCreationDate())!)
-        let modifiedDate = helper.formatingDate(date: (attributes?.fileModificationDate())!)
-
-        ShowControllers.showDetailFileViewController(from: self,
-                                                     name: fileName.url!.lastPathComponent,
-                                                     size: fileSize,
-                                                     creationDate: creationDate,
-                                                     modifiedDate: modifiedDate)
-    }
-    
-    func goToImageViewController(cell: UITableViewCell) {
-        guard let indexPath = tableView.indexPath(for: (cell)) else {return}
-        var data: Data!
-        
-        do {
-            data = try Data(contentsOf: directoryViewModel.filteredContents.value[indexPath.row].url!)
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
-        ShowControllers.showImageViewController(from: self,
-                                                image: UIImage(data: data!)!)
-
-    }
-    
-    func goToPDFViewController(cell: UITableViewCell) {
-        guard let indexPath = tableView.indexPath(for: (cell)) else {return}
-        let document = PDFDocument(url: directoryViewModel.filteredContents.value[indexPath.row].url!)
-        ShowControllers.showPDFViewController(from: self,
-                                              document: document!)
-    }
-    
-    func goToTextViewController(cell: UITableViewCell) {
-        guard let indexPath = tableView.indexPath(for: (cell)) else {return}
-        let textContent = directoryViewModel.filteredContents.value[indexPath.row].typeOfText()
-        ShowControllers.showTextViewController(from: self,
-                                               text: textContent)
-    }
-    
-    func goToDirectoryViewController(cell: UITableViewCell) {
-        guard let indexPath = tableView.indexPath(for: (cell)) else {return}
-        
-        let fileName = self.directoryViewModel
-            .filteredContents.value[indexPath.row].url!.lastPathComponent
-        let path = self.directoryViewModel.path.appendingPathComponent(fileName)
-        ShowControllers.showDirectoryViewController(from: self, path: path)
-    }
-    
     private func setupBindings() {
         directoryViewModel.filteredContents
             .asObservable()
@@ -137,9 +46,11 @@ UINavigationControllerDelegate {
                 .items(cellIdentifier: "Cell", cellType: FolderAndFileCell.self)) {(_, content, cell) in
                 cell.pasingInfoForButton = { [unowned self] in
                     if content.getType() == Type.directory {
-                        self.goToFolderInfo(cell: cell)
+                        guard let indexPath = self.tableView.indexPath(for: (cell)) else {return}
+                        self.directoryViewModel.goToFolderInfo(cell: cell, indexPath: indexPath, viewController: self)
                     } else {
-                        self.goToFileInfo(cell: cell)
+                        guard let indexPath = self.tableView.indexPath(for: (cell)) else {return}
+                        self.directoryViewModel.goToFileInfo(cell: cell, indexPath: indexPath, viewController: self)
                     }
                 }
                 
@@ -156,15 +67,26 @@ UINavigationControllerDelegate {
         
         tableView.rx.itemSelected
             .subscribe { [unowned self] in
+                let cell = self.tableView.cellForRow(at: $0.element!)!
+                guard let indexPath = self.tableView.indexPath(for: (cell)) else {return}
+                
                 switch self.directoryViewModel.filteredContents.value[$0.element!.row].getType() {
                 case .directory:
-                    self.goToDirectoryViewController(cell: self.tableView.cellForRow(at: $0.element!)!)
+                    self.directoryViewModel.goToDirectoryViewController(cell: cell,
+                                                                        indexPath: indexPath,
+                                                                        viewController: self)
                 case .image:
-                    self.goToImageViewController(cell: self.tableView.cellForRow(at: $0.element!)!)
+                    self.directoryViewModel.goToImageViewController(cell: cell,
+                                                                    indexPath: indexPath,
+                                                                    viewController: self)
                 case .pdfFile:
-                    self.goToPDFViewController(cell: self.tableView.cellForRow(at: $0.element!)!)
+                    self.directoryViewModel.goToPDFViewController(cell: cell,
+                                                                  indexPath: indexPath,
+                                                                  viewController: self)
                 case .txtFile:
-                    self.goToTextViewController(cell: self.tableView.cellForRow(at: $0.element!)!)
+                    self.directoryViewModel.goToTextViewController(cell: cell,
+                                                                   indexPath: indexPath,
+                                                                   viewController: self)
                 default:
                     print("nothing")
                 }
