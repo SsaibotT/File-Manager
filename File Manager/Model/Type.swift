@@ -12,6 +12,6 @@ enum Type: String {
     case directory = "folder"
     case pdfFile   = "pdf"
     case txtFile   = "txt"
-    case file      = "image"
-    case image     = "file"
+    case file      = "file"
+    case image     = "image"
 }

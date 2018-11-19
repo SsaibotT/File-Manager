@@ -65,35 +65,22 @@
                     <navigationItem key="navigationItem" title="Root View Controller" id="8qN-xr-zlt"/>
                     <connections>
                         <outlet property="searchBar" destination="WnQ-rr-5Oa" id="WW4-u7-wgc"/>
-                        <segue destination="iLW-5X-ZvZ" kind="show" identifier="folderSegue" id="u4S-8n-GH9"/>
-                        <segue destination="SfM-I1-lAY" kind="show" identifier="fileSegue" id="F4n-SD-drX"/>
-                        <segue destination="ryX-zz-OLg" kind="show" identifier="imageSegue" id="OEP-n8-Lee"/>
-                        <segue destination="gTA-nd-OJI" kind="show" identifier="pdfSegue" id="HnI-wM-zg9"/>
-                        <segue destination="yqo-Gb-eXv" kind="show" identifier="textSegue" id="EtW-7H-DiQ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QyJ-mR-SSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="W0U-oa-6cT">
-                    <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
-                    <connections>
-                        <segue destination="NOQ-nS-XZc" kind="show" id="Lr0-9Z-9ca"/>
-                    </connections>
-                </button>
             </objects>
             <point key="canvasLocation" x="-126" y="-100"/>
         </scene>
         <!--File View Controller-->
         <scene sceneID="dpR-0X-RvJ">
             <objects>
-                <viewController id="SfM-I1-lAY" customClass="FileViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FileViewController" id="SfM-I1-lAY" customClass="FileViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QyU-Ro-Nwr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="6UQ-FT-WBz">
-                                <rect key="frame" x="17" y="100" width="352.5" height="166"/>
+                                <rect key="frame" x="17" y="56" width="352.5" height="166"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fL6-Rq-dp4">
                                         <rect key="frame" x="8" y="8" width="158.5" height="150"/>
@@ -184,13 +171,13 @@
         <!--Text View Controller-->
         <scene sceneID="gCa-Rq-ZAF">
             <objects>
-                <viewController id="yqo-Gb-eXv" customClass="TextViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TextViewController" id="yqo-Gb-eXv" customClass="TextViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gbV-YI-iXK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DII-Dn-kr4">
-                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -217,13 +204,13 @@
         <!--View Controller-->
         <scene sceneID="Pdx-Tu-Ysw">
             <objects>
-                <viewController id="gTA-nd-OJI" customClass="PDFViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PDFViewController" id="gTA-nd-OJI" customClass="PDFViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Sle-HV-6ui">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AXS-0R-ykl" customClass="PDFView">
-                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -247,13 +234,13 @@
         <!--Folder View Controller-->
         <scene sceneID="h20-OD-oKx">
             <objects>
-                <viewController id="iLW-5X-ZvZ" customClass="FolderViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FolderViewController" id="iLW-5X-ZvZ" customClass="FolderViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nUC-vi-Xed">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="TWE-wa-6gs">
-                                <rect key="frame" x="17" y="100" width="350" height="180.5"/>
+                                <rect key="frame" x="17" y="56" width="350" height="180.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ERg-Hm-zos">
                                         <rect key="frame" x="0.0" y="0.0" width="158.5" height="180.5"/>
@@ -357,13 +344,13 @@
         <!--Image View Controller-->
         <scene sceneID="MCw-fG-0iQ">
             <objects>
-                <viewController id="ryX-zz-OLg" customClass="ImageViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImageViewController" id="ryX-zz-OLg" customClass="ImageViewController" customModule="File_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="m8h-f7-WtL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z3E-or-2ty">
-                                <rect key="frame" x="0.0" y="64" width="375" height="265"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="353"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

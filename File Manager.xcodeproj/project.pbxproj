@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		33033058EC8C641B1A63F3F5 /* Pods_File_Manager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FE9F36F34995BE96741298 /* Pods_File_Manager.framework */; };
 		C5274BB421A17C3A00144BD6 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5274BB321A17C3A00144BD6 /* Helper.swift */; };
+		C5336C4921A1FC670022CEA6 /* ShowControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5336C4821A1FC670022CEA6 /* ShowControllers.swift */; };
 		C53389602194BAA10028F84A /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = C533895F2194BAA10028F84A /* Type.swift */; };
 		C5376A0E2188ECCE00C10A96 /* PodFile in Resources */ = {isa = PBXBuildFile; fileRef = C5376A0D2188ECCE00C10A96 /* PodFile */; };
 		C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18C218869BA009036EA /* FolderAndFileCell.swift */; };
@@ -31,6 +32,7 @@
 		75FE9F36F34995BE96741298 /* Pods_File_Manager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_File_Manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B95AAC849C26D0C90452099C /* Pods-File Manager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-File Manager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-File Manager/Pods-File Manager.debug.xcconfig"; sourceTree = "<group>"; };
 		C5274BB321A17C3A00144BD6 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		C5336C4821A1FC670022CEA6 /* ShowControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowControllers.swift; sourceTree = "<group>"; };
 		C533895F2194BAA10028F84A /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		C5376A0D2188ECCE00C10A96 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
 		C537C18C218869BA009036EA /* FolderAndFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAndFileCell.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 		C5DE221D2181D741003376B3 /* File Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C5336C4821A1FC670022CEA6 /* ShowControllers.swift */,
 				C54DB59C2198C0F9000F6E0B /* ViewControllers */,
 				C5631C8C219399FF00BE9476 /* VievModel */,
 				C5DE221E2181D741003376B3 /* AppDelegate.swift */,
@@ -309,6 +312,7 @@
 				C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */,
 				C5C0A917218338CF004A7F69 /* FileViewController.swift in Sources */,
 				C5F7C79B2184A0EC009368B3 /* FolderViewController.swift in Sources */,
+				C5336C4921A1FC670022CEA6 /* ShowControllers.swift in Sources */,
 				C5631C8B2193910900BE9476 /* Content.swift in Sources */,
 				C5DE22352181D956003376B3 /* DirectoryController.swift in Sources */,
 				C53389602194BAA10028F84A /* Type.swift in Sources */,
