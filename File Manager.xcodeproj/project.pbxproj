@@ -84,6 +84,7 @@
 		C537C19021886D81009036EA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C5336C4821A1FC670022CEA6 /* ShowControllers.swift */,
 				C5631C8A2193910900BE9476 /* Content.swift */,
 				C533895F2194BAA10028F84A /* Type.swift */,
 				C5274BB321A17C3A00144BD6 /* Helper.swift */,
@@ -142,7 +143,6 @@
 		C5DE221D2181D741003376B3 /* File Manager */ = {
 			isa = PBXGroup;
 			children = (
-				C5336C4821A1FC670022CEA6 /* ShowControllers.swift */,
 				C54DB59C2198C0F9000F6E0B /* ViewControllers */,
 				C5631C8C219399FF00BE9476 /* VievModel */,
 				C5DE221E2181D741003376B3 /* AppDelegate.swift */,

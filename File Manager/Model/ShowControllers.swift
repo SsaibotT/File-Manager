@@ -18,7 +18,7 @@ class ShowControllers {
         let identifier = "DirectoryController"
         if let folderVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? DirectoryController {
-            folderVC.directoryViewModel.path = path
+            folderVC.path = path
             viewController.navigationController?.pushViewController(folderVC, animated: true)
         }
     }

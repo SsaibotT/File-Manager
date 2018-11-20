@@ -10,7 +10,7 @@ import Foundation
 
 struct Content: Equatable {
     
-    var url: URL?
+    var url: URL!
     
     init(url: URL) {
         self.url = url
@@ -19,20 +19,20 @@ struct Content: Equatable {
     func getType() -> Type {
         
         var isDirectory = ObjCBool(false)
-        FileManager.default.fileExists(atPath: url!.path, isDirectory: &isDirectory)
+        FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
         if isDirectory.boolValue {
             return Type.directory
         }
         
-        if ["jpg", "png", "gif", "jpeg"].contains((url?.pathExtension)!) {
+        if ["jpg", "png", "gif", "jpeg"].contains((url.pathExtension)) {
             return Type.image
         }
         
-        if "pdf".contains((url?.pathExtension)!) {
+        if "pdf".contains((url.pathExtension)) {
             return Type.pdfFile
         }
         
-        if ["txt", "rtf", "html"].contains((url?.pathExtension)!) {
+        if ["txt", "rtf", "html"].contains((url.pathExtension)) {
             return Type.txtFile
         }
         
@@ -42,13 +42,13 @@ struct Content: Equatable {
     func typeOfText() -> NSAttributedString {
         
         var textContent = NSAttributedString()
-        switch url!.pathExtension {
+        switch url.pathExtension {
         case "rtf":
-            textContent = chosingDocumentType(typeAttribute: .rtf, url: url!)
+            textContent = chosingDocumentType(typeAttribute: .rtf, url: url)
         case "txt":
-            textContent = chosingDocumentType(typeAttribute: .plain, url: url!)
+            textContent = chosingDocumentType(typeAttribute: .plain, url: url)
         case "html":
-            textContent = chosingDocumentType(typeAttribute: .html, url: url!)
+            textContent = chosingDocumentType(typeAttribute: .html, url: url)
         default:
             print("nothing")
         }

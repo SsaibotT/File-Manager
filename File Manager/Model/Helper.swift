@@ -10,7 +10,7 @@ import Foundation
 
 class Helper {
     
-    func casting(bytes: Double) -> String {
+    static func casting(bytes: Double) -> String {
         let unit = ["B", "KB", "MB", "GB", "TB"]
         var index = 0
         
@@ -25,7 +25,7 @@ class Helper {
         return "\(castedToString) \(unit[index])"
     }
     
-    func formatingDate(date: Date) -> String {
+    static func formatingDate(date: Date) -> String {
         
         let dateFormatter = DateFormatter()
         
@@ -40,7 +40,7 @@ class Helper {
         return dateFormatter.string(from: date)
     }
     
-    func folderSizeAndAmount(folderPath: String) -> (UInt, Int) {
+    static func folderSizeAndAmount(folderPath: String) -> (UInt, Int) {
         
         var filesArray: [String]?
         
