@@ -42,7 +42,7 @@ class Helper {
     
     static func folderSizeAndAmount(folderPath: String) -> (UInt, Int) {
         
-        var filesArray: [String]?
+        var filesArray: [String]!
         
         do {
             filesArray = try FileManager.default.subpathsOfDirectory(atPath: folderPath)
@@ -50,10 +50,10 @@ class Helper {
             print(error.localizedDescription)
         }
         
-        let fileAmount = filesArray!.count
+        let fileAmount = filesArray.count
         var fileSize: UInt = 0
         
-        for fileName in filesArray! {
+        for fileName in filesArray {
             let filePath = URL(fileURLWithPath: folderPath).appendingPathComponent(fileName)
             var fileDictionary: NSDictionary?
             do {

@@ -5,7 +5,6 @@
 //  Created by Serhii on 10/25/18.
 //  Copyright © 2018 Serhii. All rights reserved.
 //
-// 1.Запитати за init() чому path не входить під час ініту
 
 import UIKit
 import PDFKit
@@ -48,7 +47,7 @@ UINavigationControllerDelegate {
             .bind(to: tableView.rx
                 .items(cellIdentifier: "Cell", cellType: FolderAndFileCell.self)) {(_, content, cell) in
                 cell.pasingInfoForButton = { [unowned self] in
-                    if content.getType() == Type.directory {
+                    if content.type == Type.directory {
                         guard let indexPath = self.tableView.indexPath(for: (cell)) else {return}
                         self.goToFolderInfo(indexPath: indexPath, viewController: self)
                     } else {
@@ -58,22 +57,22 @@ UINavigationControllerDelegate {
                 }
                 
                 cell.cellConfig(name: content.url.lastPathComponent,
-                                image: UIImage(named: content.getType().rawValue)!)
+                                image: UIImage(named: content.type.rawValue)!)
             }
             .disposed(by: disposeBag)
         
         tableView.rx.itemDeleted
-            .subscribe { [unowned self] in
-                self.directoryViewModel.delete(index: $0.element!.row)
-            }
+            .subscribe(onNext: { [unowned self] in
+                self.directoryViewModel.delete(index: $0.row)
+            })
             .disposed(by: disposeBag)
         
         tableView.rx.itemSelected
-            .subscribe { [unowned self] in
-                let cell = self.tableView.cellForRow(at: $0.element!)!
+            .subscribe(onNext: { [unowned self] in
+                guard let cell = self.tableView.cellForRow(at: $0) else {return}
                 guard let indexPath = self.tableView.indexPath(for: (cell)) else {return}
                 
-                switch self.directoryViewModel.filteredContents.value[$0.element!.row].getType() {
+                switch self.directoryViewModel.filteredContents.value[$0.row].type {
                 case .directory:
                     self.goToDirectoryViewController(indexPath: indexPath,
                                                      viewController: self)
@@ -89,12 +88,8 @@ UINavigationControllerDelegate {
                 case .file:
                     break
                 }
-            }
+            })
             .disposed(by: disposeBag)
-        
-//        tableView.rx.itemSelected
-//            .bind(to: directoryViewModel.indexPath)
-//            .disposed(by: disposeBag)
         
         searchBar.rx.textDidBeginEditing
             .subscribe(onNext: { [unowned self] in
@@ -179,10 +174,10 @@ UINavigationControllerDelegate {
         }
 
         let defaultAction = UIAlertAction.init(title: "Ok", style: UIAlertAction.Style.default) {[unowned self] (_) in
-            let textField = alert.textFields?.first?.text
+            guard let textField = alert.textFields?.first?.text else {return}
             let mapingFilteredContents = self.directoryViewModel.filteredContents.value.map({$0.url.lastPathComponent})
             
-            if textField == "" || mapingFilteredContents.contains(textField!) {
+            if textField == "" || mapingFilteredContents.contains(textField) {
                 let failAlert = UIAlertController(title: "Fail",
                                                   message: "Name is invalid",
                                                   preferredStyle: UIAlertController.Style.alert)
@@ -195,7 +190,7 @@ UINavigationControllerDelegate {
                 failAlert.addAction(failAction)
                 self.present(failAlert, animated: true, completion: nil)
             } else {
-                self.directoryViewModel.add(name: textField!)
+                self.directoryViewModel.add(name: textField)
             }
         }
         alert.addAction(defaultAction)
@@ -213,7 +208,7 @@ UINavigationControllerDelegate {
                         viewController: UIViewController) {
         
         let folderName = directoryViewModel.filteredContents.value[indexPath.row]
-        var attributes: NSDictionary?
+        var attributes: NSDictionary!
         do {
             attributes = try FileManager.default
                 .attributesOfItem(atPath: folderName.url.path) as NSDictionary
@@ -225,8 +220,8 @@ UINavigationControllerDelegate {
         let folderSize = Helper.casting(bytes: Double(Helper
             .folderSizeAndAmount(folderPath: folderName.url.path).0))
         let folderAmoundOfFiles = "\(Helper.folderSizeAndAmount(folderPath: folderName.url.path).1)"
-        let creationDate = Helper.formatingDate(date: (attributes?.fileCreationDate())!)
-        let modifiedDate = Helper.formatingDate(date: (attributes?.fileModificationDate())!)
+        let creationDate = Helper.formatingDate(date: (attributes.fileCreationDate())!)
+        let modifiedDate = Helper.formatingDate(date: (attributes.fileModificationDate())!)
         
         ShowControllers.showDetailFolderViewController(from: viewController,
                                                        name: folderName.url.lastPathComponent,
@@ -240,7 +235,7 @@ UINavigationControllerDelegate {
                       viewController: UIViewController) {
         
         let fileName = directoryViewModel.filteredContents.value[indexPath.row]
-        var attributes: NSDictionary?
+        var attributes: NSDictionary!
         do {
             attributes = try FileManager.default.attributesOfItem(atPath: fileName.url.path) as NSDictionary
         } catch let error as NSError {
@@ -248,8 +243,8 @@ UINavigationControllerDelegate {
         }
         
         let fileSize     = Helper.casting(bytes: Double((attributes?.fileSize())!))
-        let creationDate = Helper.formatingDate(date: (attributes?.fileCreationDate())!)
-        let modifiedDate = Helper.formatingDate(date: (attributes?.fileModificationDate())!)
+        let creationDate = Helper.formatingDate(date: (attributes.fileCreationDate())!)
+        let modifiedDate = Helper.formatingDate(date: (attributes.fileModificationDate())!)
         
         ShowControllers.showDetailFileViewController(from: viewController,
                                                      name: fileName.url.lastPathComponent,
@@ -269,15 +264,15 @@ UINavigationControllerDelegate {
         }
         
         ShowControllers.showImageViewController(from: viewController,
-                                                image: UIImage(data: data!)!)
+                                                image: UIImage(data: data)!)
         
     }
     
     func goToPDFViewController(indexPath: IndexPath,
                                viewController: UIViewController) {
-        let document = PDFDocument(url: directoryViewModel.filteredContents.value[indexPath.row].url)
+        guard let document = PDFDocument(url: directoryViewModel.filteredContents.value[indexPath.row].url) else {return}
         ShowControllers.showPDFViewController(from: viewController,
-                                              document: document!)
+                                              document: document)
     }
     
     func goToDirectoryViewController(indexPath: IndexPath,

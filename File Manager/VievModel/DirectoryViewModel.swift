@@ -28,38 +28,18 @@ class DirectoryViewModel {
         setupBindings()
     }
     
-    func setupBindings() {
+    private func setupBindings() {
         
-        searchText.asObservable().subscribe(onNext: { (value) in
-            self.generatedTableFromArray(searchText: value!)
-            self.sortTheContents(array: self.filteredContents.value)
+        searchText
+            .asObservable()
+            .subscribe(onNext: { (value) in
+                self.generatedTableFromArray(searchText: value!)
+                self.sortTheContents(array: self.filteredContents.value)
         })
         .disposed(by: disposeBag)
-
-//        indexPath
-//            .asObservable()
-//            .subscribe(onNext: { (indexPath) in
-//                switch self.directoryViewModel.filteredContents.value[$0.element!.row].getType() {
-//                case .directory:
-//                    self.goToDirectoryViewController(indexPath: indexPath,
-//                                                     viewController: self)
-//                case .image:
-//                    self.goToImageViewController(indexPath: indexPath,
-//                                                 viewController: self)
-//                case .pdfFile:
-//                    self.goToPDFViewController(indexPath: indexPath,
-//                                               viewController: self)
-//                case .txtFile:
-//                    self.goToTextViewController(indexPath: indexPath,
-//                                                viewController: self)
-//                case .file:
-//                    break
-//                }
-//            })
-//            .disposed(by: disposeBag)
     }
     
-    fileprivate func settingPath() {
+    func settingPath() {
         do {
             let urls = try FileManager.default.contentsOfDirectory(at: path,
                                                                    includingPropertiesForKeys: nil,
@@ -80,7 +60,7 @@ class DirectoryViewModel {
         let name = filteredContents.value[index]
         if (try? FileManager.default.removeItem(atPath: name.url.path)) != nil {
             contents.remove(at: (contents.map({$0.url.lastPathComponent})
-                .index(of: name.url.lastPathComponent))!)
+                .index(of: name.url.lastPathComponent)!))
             filteredContents.value.remove(at: index)
             sortTheContents(array: filteredContents.value)
         }
@@ -123,7 +103,7 @@ class DirectoryViewModel {
         var arrayOfFiles = [Content]()
         
         for content in array {
-            content.getType() == Type.directory ?
+            content.type == Type.directory ?
                 arrayOfDirectories.append(content) :
                 arrayOfFiles.append(content)
         }

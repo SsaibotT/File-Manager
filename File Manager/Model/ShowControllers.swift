@@ -16,6 +16,7 @@ class ShowControllers {
                                             path: URL) {
         
         let identifier = "DirectoryController"
+        print()
         if let folderVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? DirectoryController {
             folderVC.path = path

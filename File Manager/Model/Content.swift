@@ -16,8 +16,7 @@ struct Content: Equatable {
         self.url = url
     }
     
-    func getType() -> Type {
-        
+    var type: Type {
         var isDirectory = ObjCBool(false)
         FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
         if isDirectory.boolValue {
@@ -38,6 +37,29 @@ struct Content: Equatable {
         
         return Type.file
     }
+    
+//    func type() -> Type {
+//
+//        var isDirectory = ObjCBool(false)
+//        FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+//        if isDirectory.boolValue {
+//            return Type.directory
+//        }
+//
+//        if ["jpg", "png", "gif", "jpeg"].contains((url.pathExtension)) {
+//            return Type.image
+//        }
+//
+//        if "pdf".contains((url.pathExtension)) {
+//            return Type.pdfFile
+//        }
+//
+//        if ["txt", "rtf", "html"].contains((url.pathExtension)) {
+//            return Type.txtFile
+//        }
+//
+//        return Type.file
+//    }
     
     func typeOfText() -> NSAttributedString {
         

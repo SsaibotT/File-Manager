@@ -13,6 +13,7 @@
 		C53389602194BAA10028F84A /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = C533895F2194BAA10028F84A /* Type.swift */; };
 		C5376A0E2188ECCE00C10A96 /* PodFile in Resources */ = {isa = PBXBuildFile; fileRef = C5376A0D2188ECCE00C10A96 /* PodFile */; };
 		C537C18D218869BA009036EA /* FolderAndFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C537C18C218869BA009036EA /* FolderAndFileCell.swift */; };
+		C53ADF7A21A5D87A00FEF429 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53ADF7921A5D87A00FEF429 /* Extensions.swift */; };
 		C54DB59E2198C13F000F6E0B /* DirectoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54DB59D2198C13F000F6E0B /* DirectoryViewModel.swift */; };
 		C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8621931DFD00BE9476 /* PDFViewController.swift */; };
 		C5631C8921932F8900BE9476 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8821932F8900BE9476 /* TextViewController.swift */; };
@@ -36,6 +37,7 @@
 		C533895F2194BAA10028F84A /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		C5376A0D2188ECCE00C10A96 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
 		C537C18C218869BA009036EA /* FolderAndFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAndFileCell.swift; sourceTree = "<group>"; };
+		C53ADF7921A5D87A00FEF429 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C54DB59D2198C13F000F6E0B /* DirectoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryViewModel.swift; sourceTree = "<group>"; };
 		C5631C8621931DFD00BE9476 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
 		C5631C8821932F8900BE9476 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +94,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		C53ADF7821A5D85500FEF429 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C53ADF7921A5D87A00FEF429 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		C54DB59C2198C0F9000F6E0B /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +153,7 @@
 		C5DE221D2181D741003376B3 /* File Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C53ADF7821A5D85500FEF429 /* Extensions */,
 				C54DB59C2198C0F9000F6E0B /* ViewControllers */,
 				C5631C8C219399FF00BE9476 /* VievModel */,
 				C5DE221E2181D741003376B3 /* AppDelegate.swift */,
@@ -321,6 +332,7 @@
 				C5274BB421A17C3A00144BD6 /* Helper.swift in Sources */,
 				C5F7721B218B08770091EBBB /* ImageViewController.swift in Sources */,
 				C5DE221F2181D741003376B3 /* AppDelegate.swift in Sources */,
+				C53ADF7A21A5D87A00FEF429 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
