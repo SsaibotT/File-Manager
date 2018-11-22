@@ -15,27 +15,18 @@ class FileViewController: UIViewController {
     @IBOutlet weak var creationDateLabel: UILabel!
     @IBOutlet weak var modifiedDateLabel: UILabel!
 
-    var name: String?
-    var size: String?
-    var creationDate: String?
-    var modifiedDate: String?
+    var fileInfo: FolderAndFileDetailInfo!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        nameLabel.text = name
-        sizeLabel.text = size
-        creationDateLabel.text = creationDate
-        modifiedDateLabel.text = modifiedDate
+        nameLabel.text = fileInfo.name
+        sizeLabel.text = fileInfo.size
+        creationDateLabel.text = fileInfo.creationDate
+        modifiedDateLabel.text = fileInfo.modifiedDate
     }
     
-    func configFileViewControl(name: String,
-                               size: String,
-                               creationDate: String,
-                               modifiedDate: String) {
-        self.name = name
-        self.size = size
-        self.creationDate = creationDate
-        self.modifiedDate = modifiedDate
+    func configFileViewControl(fileInfo: FolderAndFileDetailInfo) {
+        self.fileInfo = fileInfo
     }
 }

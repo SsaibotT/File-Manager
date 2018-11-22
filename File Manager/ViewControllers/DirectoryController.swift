@@ -31,6 +31,7 @@ UINavigationControllerDelegate {
             path = URL.init(string: "file:///Users/ghjkghkj/Desktop/folder/")
         }
         directoryViewModel = DirectoryViewModel(path: path)
+        self.title = directoryViewModel.path.lastPathComponent
         
         setupBindings()
     }
@@ -217,18 +218,16 @@ UINavigationControllerDelegate {
             print(error.localizedDescription)
         }
         
-        let folderSize = Helper.casting(bytes: Double(Helper
-            .folderSizeAndAmount(folderPath: folderName.url.path).0))
-        let folderAmoundOfFiles = "\(Helper.folderSizeAndAmount(folderPath: folderName.url.path).1)"
-        let creationDate = Helper.formatingDate(date: (attributes.fileCreationDate())!)
-        let modifiedDate = Helper.formatingDate(date: (attributes.fileModificationDate())!)
+        var folderInfo = FolderAndFileDetailInfo()
         
-        ShowControllers.showDetailFolderViewController(from: viewController,
-                                                       name: folderName.url.lastPathComponent,
-                                                       size: folderSize,
-                                                       amountOfFiles: folderAmoundOfFiles,
-                                                       creationDate: creationDate,
-                                                       modifiedDate: modifiedDate)
+        folderInfo.name = folderName.url.lastPathComponent
+        folderInfo.size = Helper.casting(bytes: Double(Helper
+            .folderSizeAndAmount(folderPath: folderName.url.path).0))
+        folderInfo.amountOfFiles = "\(Helper.folderSizeAndAmount(folderPath: folderName.url.path).1)"
+        folderInfo.creationDate  = Helper.formatingDate(date: (attributes.fileCreationDate())!)
+        folderInfo.modifiedDate  = Helper.formatingDate(date: (attributes.fileModificationDate())!)
+        
+        ShowControllers.showDetailFolderViewController(from: self, folderInfo: folderInfo)
     }
     
     func goToFileInfo(indexPath: IndexPath,
@@ -242,15 +241,15 @@ UINavigationControllerDelegate {
             print(error.localizedDescription)
         }
         
-        let fileSize     = Helper.casting(bytes: Double((attributes?.fileSize())!))
-        let creationDate = Helper.formatingDate(date: (attributes.fileCreationDate())!)
-        let modifiedDate = Helper.formatingDate(date: (attributes.fileModificationDate())!)
+        var fileInfo = FolderAndFileDetailInfo()
+        
+        fileInfo.name = fileName.url.lastPathComponent
+        fileInfo.size = Helper.casting(bytes: Double((attributes?.fileSize())!))
+        fileInfo.creationDate = Helper.formatingDate(date: (attributes.fileCreationDate())!)
+        fileInfo.modifiedDate = Helper.formatingDate(date: (attributes.fileModificationDate())!)
         
         ShowControllers.showDetailFileViewController(from: viewController,
-                                                     name: fileName.url.lastPathComponent,
-                                                     size: fileSize,
-                                                     creationDate: creationDate,
-                                                     modifiedDate: modifiedDate)
+                                                     fileInfo: fileInfo)
     }
     
     func goToImageViewController(indexPath: IndexPath,
@@ -270,7 +269,8 @@ UINavigationControllerDelegate {
     
     func goToPDFViewController(indexPath: IndexPath,
                                viewController: UIViewController) {
-        guard let document = PDFDocument(url: directoryViewModel.filteredContents.value[indexPath.row].url) else {return}
+        guard let document = PDFDocument(url: directoryViewModel.filteredContents.value[indexPath.row].url)
+            else {return}
         ShowControllers.showPDFViewController(from: viewController,
                                               document: document)
     }

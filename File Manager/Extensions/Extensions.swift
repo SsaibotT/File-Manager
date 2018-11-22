@@ -9,12 +9,8 @@
 import Foundation
 import UIKit
 
-//extension UIViewController {
-//    static var identifier: String {
-//        get {
-//            let newValue = ""
-//            self.restorationIdentifier! = newValue
-//            return newValue
-//        }
-//    }
-//}
+extension UIViewController {
+    static var identifier: String {
+        return "\(self)"
+    }
+}

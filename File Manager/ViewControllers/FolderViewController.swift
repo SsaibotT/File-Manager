@@ -16,31 +16,20 @@ class FolderViewController: UIViewController {
     @IBOutlet weak var creationDateLabel: UILabel!
     @IBOutlet weak var modofiedDateLabel: UILabel!
 
-    var name: String?
-    var size: String?
-    var amountOfFiles: String?
-    var creationDate: String?
-    var modifiedDate: String?
+    var folderInfo: FolderAndFileDetailInfo!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        nameLabel.text = name
-        sizeLabel.text = size
-        amountOfFilesLabel.text = amountOfFiles
-        creationDateLabel.text  = creationDate
-        modofiedDateLabel.text  = modifiedDate
+        nameLabel.text = folderInfo.name
+        sizeLabel.text = folderInfo.size
+        amountOfFilesLabel.text = folderInfo.amountOfFiles
+        creationDateLabel.text  = folderInfo.creationDate
+        modofiedDateLabel.text  = folderInfo.modifiedDate
     }
     
-    func configFolderViewControl(name: String,
-                                 size: String,
-                                 amountOfFiles: String,
-                                 creationDate: String,
-                                 modifiedDate: String) {
-        self.name = name
-        self.size = size
-        self.amountOfFiles = amountOfFiles
-        self.creationDate = creationDate
-        self.modifiedDate = modifiedDate
+    func configFolderViewControl(folderInfo: FolderAndFileDetailInfo) {
+        
+        self.folderInfo = folderInfo
     }
 }

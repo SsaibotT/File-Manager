@@ -15,8 +15,7 @@ class ShowControllers {
     static func showDirectoryViewController(from viewController: UIViewController,
                                             path: URL) {
         
-        let identifier = "DirectoryController"
-        print()
+        let identifier = DirectoryController.identifier
         if let folderVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? DirectoryController {
             folderVC.path = path
@@ -25,39 +24,26 @@ class ShowControllers {
     }
     
     static func showDetailFileViewController(from viewController: UIViewController,
-                                             name: String,
-                                             size: String,
-                                             creationDate: String,
-                                             modifiedDate: String) {
+                                             fileInfo: FolderAndFileDetailInfo) {
         
-        let identifier = "FileViewController"
+        let identifier = FileViewController.identifier
         if let fileVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? FileViewController {
             fileVC.hidesBottomBarWhenPushed = true
-            fileVC.configFileViewControl(name: name,
-                                         size: size,
-                                         creationDate: creationDate,
-                                         modifiedDate: modifiedDate)
+            fileVC.configFileViewControl(fileInfo: fileInfo)
             viewController.navigationController?.show(fileVC, sender: viewController)
         }
     }
     
     static func showDetailFolderViewController(from viewController: UIViewController,
-                                               name: String,
-                                               size: String,
-                                               amountOfFiles: String,
-                                               creationDate: String,
-                                               modifiedDate: String) {
+                                               folderInfo: FolderAndFileDetailInfo) {
         
-        let identifier = "FolderViewController"
+        let identifier = FolderViewController.identifier
         if let folderVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? FolderViewController {
             folderVC.hidesBottomBarWhenPushed = true
-            folderVC.configFolderViewControl(name: name,
-                                             size: size,
-                                             amountOfFiles: amountOfFiles,
-                                             creationDate: creationDate,
-                                             modifiedDate: modifiedDate)
+            
+            folderVC.configFolderViewControl(folderInfo: folderInfo)
             viewController.navigationController?.show(folderVC, sender: viewController)
         }
     }
@@ -65,7 +51,7 @@ class ShowControllers {
     static func showImageViewController(from viewController: UIViewController,
                                         image: UIImage) {
         
-        let identifier = "ImageViewController"
+        let identifier = ImageViewController.identifier
         if let imageVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? ImageViewController {
             imageVC.hidesBottomBarWhenPushed = true
@@ -77,7 +63,7 @@ class ShowControllers {
     static func showPDFViewController(from viewController: UIViewController,
                                       document: PDFDocument) {
         
-        let identifier = "PDFViewController"
+        let identifier = PDFViewController.identifier
         if let pdfVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? PDFViewController {
             pdfVC.hidesBottomBarWhenPushed = true
@@ -89,7 +75,7 @@ class ShowControllers {
     static func showTextViewController(from viewController: UIViewController,
                                        text: NSAttributedString) {
         
-        let identifier = "TextViewController"
+        let identifier = TextViewController.identifier
         if let textVC = viewController.storyboard?
             .instantiateViewController(withIdentifier: identifier) as? TextViewController {
             textVC.hidesBottomBarWhenPushed = true

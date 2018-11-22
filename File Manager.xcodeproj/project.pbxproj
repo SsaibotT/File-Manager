@@ -18,6 +18,7 @@
 		C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8621931DFD00BE9476 /* PDFViewController.swift */; };
 		C5631C8921932F8900BE9476 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8821932F8900BE9476 /* TextViewController.swift */; };
 		C5631C8B2193910900BE9476 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5631C8A2193910900BE9476 /* Content.swift */; };
+		C59649E621A6AEAC0060FB6B /* FolderAndFileDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59649E521A6AEAC0060FB6B /* FolderAndFileDetailInfo.swift */; };
 		C5C0A917218338CF004A7F69 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C0A916218338CF004A7F69 /* FileViewController.swift */; };
 		C5DE221F2181D741003376B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DE221E2181D741003376B3 /* AppDelegate.swift */; };
 		C5DE22242181D741003376B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5DE22222181D741003376B3 /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 		C5631C8621931DFD00BE9476 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
 		C5631C8821932F8900BE9476 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		C5631C8A2193910900BE9476 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
+		C59649E521A6AEAC0060FB6B /* FolderAndFileDetailInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAndFileDetailInfo.swift; sourceTree = "<group>"; };
 		C5C0A916218338CF004A7F69 /* FileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
 		C5DE221B2181D741003376B3 /* File Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "File Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5DE221E2181D741003376B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 		C537C19021886D81009036EA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C59649E521A6AEAC0060FB6B /* FolderAndFileDetailInfo.swift */,
 				C5336C4821A1FC670022CEA6 /* ShowControllers.swift */,
 				C5631C8A2193910900BE9476 /* Content.swift */,
 				C533895F2194BAA10028F84A /* Type.swift */,
@@ -319,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C59649E621A6AEAC0060FB6B /* FolderAndFileDetailInfo.swift in Sources */,
 				C54DB59E2198C13F000F6E0B /* DirectoryViewModel.swift in Sources */,
 				C5631C8721931DFD00BE9476 /* PDFViewController.swift in Sources */,
 				C5C0A917218338CF004A7F69 /* FileViewController.swift in Sources */,
